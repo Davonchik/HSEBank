@@ -11,6 +11,7 @@ public interface IFinancialAssistant
     Operation CreateOperation(OperationDto operationDto);
     bool EditOperation(EditOperationDto editOperationDto);
     bool DeleteOperation(Guid operationId);
+    Operation GetOperation(Guid operationId);
     
     BankAccount CreateBankAccount(BankAccountDto bankAccountDto);
     bool EditBankAccount(EditBankAccountDto editBankAccountDto);
@@ -20,6 +21,7 @@ public interface IFinancialAssistant
     Category CreateCategory(CategoryDto categoryDto);
     bool EditCategory(EditCategoryDto editCategoryDto);
     bool DeleteCategory(Guid categoryId);
+    Category GetCategory(Guid categoryId);
     
     decimal RecalculateBalance(Guid bankAccountId);
     

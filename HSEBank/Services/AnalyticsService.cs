@@ -1,4 +1,5 @@
 using HSEBank.Abstractions;
+using HSEBank.Dto;
 using HSEBank.Models;
 using HSEBank.Shared;
 
@@ -13,32 +14,21 @@ public class AnalyticsService : IAnalyticsService
         _assistant = assistant;
     }
 
-    public decimal GetBalanceDifference(DateTime start, DateTime end)
+    public decimal GetBalanceDifference(FinancialDataDto data, DateTime startDate, DateTime endDate)
     {
-        decimal totalIncome = 0;
-        decimal totalExpense = 0;
-        foreach (var op in _assistant.GetAllOperations())
-        {
-            if (op.Date >= start && op.Date <= end)
-            {
-                if (op.Type == OperationType.Income)
-                    totalIncome += op.Amount;
-                else if (op.Type == OperationType.Expense)
-                    totalExpense += op.Amount;
-            }
-        }
+        decimal totalIncome = data.Operations
+            .Where(op => op.Date >= startDate && op.Date <= endDate && op.Type == OperationType.Income)
+            .Sum(op => op.Amount);
+        decimal totalExpense = data.Operations
+            .Where(op => op.Date >= startDate && op.Date <= endDate && op.Type == OperationType.Expense)
+            .Sum(op => op.Amount);
         return totalIncome - totalExpense;
     }
 
-    public Dictionary<Guid, List<Operation>> GroupOperationsByCategory()
+    public Dictionary<Guid, List<Operation>> GroupOperationsByCategory(FinancialDataDto data)
     {
-        var result = new Dictionary<Guid, List<Operation>>();
-        foreach (var op in _assistant.GetAllOperations())
-        {
-            if (!result.ContainsKey(op.CategoryId))
-                result[op.CategoryId] = new List<Operation>();
-            result[op.CategoryId].Add(op);
-        }
-        return result;
+        return data.Operations
+            .GroupBy(op => op.CategoryId)
+            .ToDictionary(g => g.Key, g => g.ToList());
     }
 }

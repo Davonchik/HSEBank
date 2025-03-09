@@ -12,6 +12,8 @@ public class DataImporterFactory
         {
             ".json" => new JsonDataImporter<T>(),
             ".csv" => new CsvDataImporter<T>(),
+            ".yaml" => new YamlDataImporter<T>(),
+            ".yml" => new YamlDataImporter<T>(),
             _ => throw new NotSupportedException($"Формат файла {extension} не поддерживается.")
         };
     }

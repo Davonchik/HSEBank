@@ -1,3 +1,4 @@
+using HSEBank.Dto;
 using HSEBank.Models;
 
 namespace HSEBank.Abstractions;
@@ -7,6 +8,6 @@ namespace HSEBank.Abstractions;
 /// </summary>
 public interface IAnalyticsService
 {
-    decimal GetBalanceDifference(DateTime start, DateTime end);
-    Dictionary<Guid, List<Operation>> GroupOperationsByCategory();
+    decimal GetBalanceDifference(FinancialDataDto data, DateTime start, DateTime end);
+    Dictionary<Guid, List<Operation>> GroupOperationsByCategory(FinancialDataDto data);
 }
