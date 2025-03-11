@@ -7,7 +7,4 @@ namespace HSEBank.DataAccess.Repositories.Abstractions;
 /// <summary>
 /// Service for working with operations.
 /// </summary>
-public interface IOperationRepository : IRepository<Operation, EditOperationDto>
-{
-    bool OperationIsExist(Guid operationId);
-}
+public interface IOperationRepository : IRepository<Operation, EditOperationDto>;

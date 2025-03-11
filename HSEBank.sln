@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSEBank", "HSEBank\HSEBank.csproj", "{52F8C428-EC63-4BF4-8E1C-2C8E2173E8CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHSEBank", "TestHSEBank\TestHSEBank.csproj", "{79748C06-BFDA-4530-BC36-4B203A9CB2D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{52F8C428-EC63-4BF4-8E1C-2C8E2173E8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52F8C428-EC63-4BF4-8E1C-2C8E2173E8CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52F8C428-EC63-4BF4-8E1C-2C8E2173E8CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79748C06-BFDA-4530-BC36-4B203A9CB2D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79748C06-BFDA-4530-BC36-4B203A9CB2D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79748C06-BFDA-4530-BC36-4B203A9CB2D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79748C06-BFDA-4530-BC36-4B203A9CB2D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

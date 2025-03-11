@@ -45,7 +45,7 @@ public class OperationRepository : IOperationRepository
         return _operations.Values.Where(predicate);
     }
 
-    public bool OperationIsExist(Guid operationId)
+    public bool Exists(Guid operationId)
     {
         return _operations.ContainsKey(operationId);
     }

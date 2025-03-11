@@ -48,4 +48,9 @@ public class AccountRepository : IAccountRepository
     {
         return _accounts.Values.Where(predicate);
     }
+
+    public bool Exists(Guid id)
+    {
+        return _accounts.ContainsKey(id);
+    }
 }

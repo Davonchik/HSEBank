@@ -48,6 +48,9 @@ public class CategoryFacade : ICategoryFacade
     {
         return _categoryRepository.GetByCondition(predicate);
     }
-    
-    
+
+    public bool CategoryExists(Guid id)
+    {
+        return _categoryRepository.Exists(id);
+    }
 }

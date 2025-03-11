@@ -51,6 +51,6 @@ public class OperationFacade : IOperationFacade
 
     public bool OperationExists(Guid id)
     {
-        return _operationRepository.OperationIsExist(id);
+        return _operationRepository.Exists(id);
     }
 }

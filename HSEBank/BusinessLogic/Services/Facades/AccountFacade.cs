@@ -7,9 +7,9 @@ namespace HSEBank.BusinessLogic.Services.Facades;
 
 public class AccountFacade : IAccountFacade
 {
-    private IFinancialFactory _financialFactory { get; }
-    
-    private IAccountRepository _accountRepository { get; }
+    private IFinancialFactory _financialFactory;
+
+    private IAccountRepository _accountRepository;
     
     public AccountFacade(IFinancialFactory financialFactory, IAccountRepository accountRepository)
     {
@@ -42,5 +42,10 @@ public class AccountFacade : IAccountFacade
     public IEnumerable<BankAccount> GetAllBankAccounts()
     {
         return _accountRepository.GetAll();
+    }
+
+    public bool AccountExists(Guid id)
+    {
+        return _accountRepository.Exists(id);
     }
 }

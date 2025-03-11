@@ -15,4 +15,6 @@ public interface IAccountFacade
     public bool DeleteBankAccount(Guid bankAccountId);
     
     public IEnumerable<BankAccount> GetAllBankAccounts();
+    
+    public bool AccountExists(Guid id);
 }

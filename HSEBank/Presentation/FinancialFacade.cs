@@ -12,34 +12,41 @@ public class FinancialFacade : IFinancialFacade
     private readonly IAccountFacade _accountFacade;
     private readonly ICategoryFacade _categoryFacade;
     private readonly IOperationFacade _operationFacade;
-    private readonly IFinancialFacade _financialFacade;
+    // private readonly IFinancialFacade _financialFacade;
 
     private FinancialFacade(
         IAccountFacade accountFacade,
         ICategoryFacade categoryFacade,
-        IOperationFacade operationFacade,
-        IFinancialFacade financialFacade)
+        IOperationFacade operationFacade)
     {
         _accountFacade = accountFacade;
         _categoryFacade = categoryFacade;
         _operationFacade = operationFacade;
-        _financialFacade = financialFacade;
+        // _financialFacade = financialFacade;
     }
 
     public static FinancialFacade GetInstance(IAccountFacade accountFacade,
         ICategoryFacade categoryFacade,
-        IOperationFacade operationFacade,
-        IFinancialFacade financialFacade)
+        IOperationFacade operationFacade)
     {
         if(_instance == null)
         {
-            _instance = new FinancialFacade(accountFacade, categoryFacade, operationFacade, financialFacade);
+            _instance = new FinancialFacade(accountFacade, categoryFacade, operationFacade);
         }
         return _instance;
     }
     
     public Operation CreateOperation(OperationDto operationDto)
     {
+        if (!_accountFacade.AccountExists(operationDto.BankAccountId))
+        {
+            throw new ArgumentException($"Account does not exist {nameof(operationDto.BankAccountId)}");
+        }
+        
+        if (!_categoryFacade.CategoryExists(operationDto.CategoryId))
+        {
+            throw new ArgumentException($"Category does not exist {nameof(operationDto.CategoryId)}");
+        }
         return _operationFacade.Create(operationDto);
     }
 

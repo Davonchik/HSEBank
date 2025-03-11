@@ -48,4 +48,9 @@ public class CategoryRepository : ICategoryRepository
     {
         return _categories.Values.Where(predicate);
     }
+
+    public bool Exists(Guid id)
+    {
+        return _categories.ContainsKey(id);
+    }
 }
