@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "QbzREZ06Hzc=",
+  "dgSpecHash": "blNL/LyYr3dvdS0SBK8Iuu4AN8wefsDfcCDYDks83QexDojh5+4og2WnzciPygC7twA8YUQUs2W6d+bCk6gBcw==",
   "success": true,
   "projectFilePath": "/Users/david/Desktop/ВШЭ/C#/HSEBank/TestHSEBank/TestHSEBank.csproj",
   "expectedPackageFiles": [
     "/Users/david/.nuget/packages/autofixture/5.0.0-preview0012/autofixture.5.0.0-preview0012.nupkg.sha512",
     "/Users/david/.nuget/packages/castle.core/5.1.1/castle.core.5.1.1.nupkg.sha512",
-    "/Users/david/.nuget/packages/coverlet.collector/6.0.0/coverlet.collector.6.0.0.nupkg.sha512",
+    "/Users/david/.nuget/packages/coverlet.collector/6.0.4/coverlet.collector.6.0.4.nupkg.sha512",
     "/Users/david/.nuget/packages/csvhelper/33.0.1/csvhelper.33.0.1.nupkg.sha512",
     "/Users/david/.nuget/packages/fare/2.2.1/fare.2.2.1.nupkg.sha512",
     "/Users/david/.nuget/packages/microsoft.codecoverage/17.6.0/microsoft.codecoverage.17.6.0.nupkg.sha512",

@@ -7,6 +7,7 @@ namespace HSEBank.BusinessLogic.Dto;
 /// </summary>
 public class CategoryDto
 {
+    public Guid CategoryId { get; set; }
     public CategoryType Type { get; set; }
     public string Name { get; set; }
 }
