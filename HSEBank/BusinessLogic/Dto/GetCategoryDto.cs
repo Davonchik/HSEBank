@@ -1,4 +1,5 @@
 using HSEBank.DataAccess.Common.Enums;
+using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace HSEBank.BusinessLogic.Dto;
 
@@ -8,6 +9,6 @@ namespace HSEBank.BusinessLogic.Dto;
 public class GetCategoryDto
 {
     public Guid Id { get; set; }
-    public CategoryType Type { get; set; }
+    public Type Type { get; set; }
     public string Name { get; set; }
 }

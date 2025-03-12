@@ -2,7 +2,10 @@ using HSEBank.BusinessLogic.Dto;
 using HSEBank.BusinessLogic.Services;
 using HSEBank.BusinessLogic.Services.Abstractions;
 using HSEBank.BusinessLogic.Services.Facades;
+using HSEBank.DataAccess.Common.Enums;
 using HSEBank.DataAccess.Models;
+using HSEBank.Presentation.Common;
+using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace HSEBank.Presentation;
 
@@ -13,13 +16,13 @@ public class FinancialFacade : IFinancialFacade
     private readonly IAccountFacade _accountFacade;
     private readonly ICategoryFacade _categoryFacade;
     private readonly IOperationFacade _operationFacade;
-    private readonly AnalyticsService _analyticsService;
+    private readonly IAnalyticsService _analyticsService;
 
     private FinancialFacade(
         IAccountFacade accountFacade,
         ICategoryFacade categoryFacade,
         IOperationFacade operationFacade,
-        AnalyticsService analyticsService)
+        IAnalyticsService analyticsService)
     {
         _accountFacade = accountFacade;
         _categoryFacade = categoryFacade;
@@ -30,7 +33,7 @@ public class FinancialFacade : IFinancialFacade
     public static FinancialFacade GetInstance(IAccountFacade accountFacade,
         ICategoryFacade categoryFacade,
         IOperationFacade operationFacade,
-        AnalyticsService analyticsService)
+        IAnalyticsService analyticsService)
     {
         if(_instance == null)
         {
@@ -50,6 +53,11 @@ public class FinancialFacade : IFinancialFacade
         {
             throw new ArgumentException($"Category does not exist {nameof(operationDto.CategoryId)}");
         }
+        
+        var category = GetCategory(operationDto.CategoryId);
+
+        operationDto.Type = category.Type;
+        
         return _operationFacade.Create(operationDto);
     }
 
@@ -74,7 +82,38 @@ public class FinancialFacade : IFinancialFacade
 
     public BankAccount CreateBankAccount(BankAccountDto bankAccountDto)
     {
-        return _accountFacade.Create(bankAccountDto);
+        var account =  _accountFacade.Create(bankAccountDto);
+
+        Guid categoryId;
+
+        if (!_categoryFacade.CategoryExists(Guid.Parse(Constants.InitCategoryGuid)))
+        {
+            var category = CreateCategory(new CategoryDto()
+            {
+                Name = Constants.InitCategoryName,
+                CategoryId = Guid.Parse(Constants.InitCategoryGuid),
+                Type = Type.Income
+            });
+            
+            categoryId = category.Id;
+        }
+        else
+        {
+            categoryId = GetCategory(Guid.Parse(Constants.InitCategoryGuid)).Id;
+        }
+
+        var operation = new OperationDto()
+        {
+            Amount = 0,
+            BankAccountId = account.Id,
+            CategoryId = categoryId,
+            Description = "Initial bank account operation",
+            Type = Type.Income
+        };
+        
+        CreateOperation(operation);
+        
+        return account;
     }
 
     public bool EditBankAccount(EditBankAccountDto editBankAccountDto)
@@ -121,9 +160,35 @@ public class FinancialFacade : IFinancialFacade
         decimal balance = 0;
         foreach (var op in _operationFacade.GetByCondition(o => o.BankAccountId == bankAccountId))
         {
-            balance += (op.Type == BusinessLogic.Shared.OperationType.Income ? op.Amount : -op.Amount);
+            balance += (op.Type == Type.Income ? op.Amount : -op.Amount);
         }
         return balance;
+    }
+
+    public void ImportAccountsFromJson(string filePath)
+    {
+        var jsonImporter = new JsonDataImporter<BankAccountDto>();
+        
+        var accountDtos = jsonImporter.Import(filePath);
+
+        foreach (var account in accountDtos)
+        {
+            CreateBankAccount(account);
+        }
+    }
+
+    public void ExportAccountsFromJson(string filePath)
+    {
+        var exportVisitor = new JsonAggregateExportVisitor();
+
+        var accounts = GetAllBankAccounts().ToList();
+
+        foreach (var account in accounts)
+        {
+            account.Accept(exportVisitor);
+        }
+        
+        exportVisitor.SaveToFile(filePath);
     }
 
     public decimal GetBalanceDifference(FinancialDataDto data, DateTime start, DateTime end)

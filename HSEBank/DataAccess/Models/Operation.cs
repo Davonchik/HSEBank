@@ -1,5 +1,5 @@
 using HSEBank.BusinessLogic.Services.Abstractions;
-using HSEBank.BusinessLogic.Shared;
+using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace HSEBank.DataAccess.Models;
 
@@ -9,7 +9,7 @@ namespace HSEBank.DataAccess.Models;
 public class Operation : IVisitable
 {
     public Guid Id { get; set; }
-    public OperationType Type { get; set; }
+    public Type Type { get; set; }
     public Guid BankAccountId { get; set; }
     public decimal Amount { get; set; }
     public DateTime Date { get; set; }

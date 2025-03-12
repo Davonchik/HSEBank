@@ -28,102 +28,145 @@ public class AccountFacadeTests
     {
         // Arrange
         var bankAccountDto = _fixture.Create<BankAccountDto>();
-        var newBankAccount = _fixture.Create<BankAccount>();
+        var expectedAccount = _fixture.Create<BankAccount>();
 
-        _financialFactoryMock
-            .Setup(ff => ff.CreateBankAccount(bankAccountDto))
-            .Returns(newBankAccount);
+        _financialFactoryMock.Setup(f => f.CreateBankAccount(bankAccountDto))
+                             .Returns(expectedAccount);
+        _accountRepositoryMock.Setup(r => r.Create(expectedAccount))
+                              .Returns(expectedAccount);
 
         // Act
         var result = _accountFacade.Create(bankAccountDto);
 
         // Assert
-        Assert.Equal(newBankAccount, result);
-        _financialFactoryMock.Verify(ff => ff.CreateBankAccount(bankAccountDto), Times.Once);
-        _accountRepositoryMock.Verify(ar => ar.Create(newBankAccount), Times.Once);
+        Assert.Equal(expectedAccount, result);
+        _financialFactoryMock.Verify(f => f.CreateBankAccount(bankAccountDto), Times.Once);
+        _accountRepositoryMock.Verify(r => r.Create(expectedAccount), Times.Once);
     }
 
     [Fact]
-    public void GetById_Should_Return_BankAccount_From_Repository()
+    public void GetById_Should_Throw_Exception_If_Account_Does_Not_Exist()
     {
         // Arrange
-        var accountId = Guid.NewGuid();
-        var expectedBankAccount = _fixture.Create<BankAccount>();
+        var id = Guid.NewGuid();
+        _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(false);
 
-        _accountRepositoryMock
-            .Setup(ar => ar.GetById(accountId))
-            .Returns(expectedBankAccount);
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentException>(() => _accountFacade.GetById(id));
+        Assert.Equal($"Account with id {id} does not exist", ex.Message);
+    }
+
+    [Fact]
+    public void GetById_Should_Return_BankAccount_If_Exists()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var expectedAccount = _fixture.Create<BankAccount>();
+        _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(true);
+        _accountRepositoryMock.Setup(r => r.GetById(id)).Returns(expectedAccount);
 
         // Act
-        var result = _accountFacade.GetById(accountId);
+        var result = _accountFacade.GetById(id);
 
         // Assert
-        Assert.Equal(expectedBankAccount, result);
+        Assert.Equal(expectedAccount, result);
     }
 
     [Fact]
-    public void EditBankAccount_Should_Call_Repository_Update_And_Return_Result()
+    public void EditBankAccount_Should_Throw_Exception_If_Account_Does_Not_Exist()
     {
         // Arrange
-        var editBankAccountDto = _fixture.Create<EditBankAccountDto>();
-        _accountRepositoryMock
-            .Setup(ar => ar.Update(editBankAccountDto))
-            .Returns(true);
+        var editDto = _fixture.Create<EditBankAccountDto>();
+        _accountRepositoryMock.Setup(r => r.Exists(editDto.BankAccountId)).Returns(false);
+
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentException>(() => _accountFacade.EditBankAccount(editDto));
+        Assert.Equal($"Account with id {editDto.BankAccountId} does not exist", ex.Message);
+    }
+
+    [Fact]
+    public void EditBankAccount_Should_Call_Update_And_Return_True_When_Account_Exists()
+    {
+        // Arrange
+        var editDto = _fixture.Create<EditBankAccountDto>();
+        _accountRepositoryMock.Setup(r => r.Exists(editDto.BankAccountId)).Returns(true);
+        _accountRepositoryMock.Setup(r => r.Update(editDto)).Returns(true);
 
         // Act
-        var result = _accountFacade.EditBankAccount(editBankAccountDto);
+        var result = _accountFacade.EditBankAccount(editDto);
 
         // Assert
         Assert.True(result);
-        _accountRepositoryMock.Verify(ar => ar.Update(editBankAccountDto), Times.Once);
+        _accountRepositoryMock.Verify(r => r.Update(editDto), Times.Once);
     }
 
     [Fact]
-    public void DeleteBankAccount_Should_Call_Repository_Delete_And_Return_Result()
+    public void DeleteBankAccount_Should_Throw_Exception_If_Account_Does_Not_Exist()
     {
         // Arrange
-        var bankAccountId = Guid.NewGuid();
-        _accountRepositoryMock
-            .Setup(ar => ar.Delete(bankAccountId))
-            .Returns(true);
+        var id = Guid.NewGuid();
+        _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(false);
+
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentException>(() => _accountFacade.DeleteBankAccount(id));
+        Assert.Equal($"Account with id {id} does not exist", ex.Message);
+    }
+
+    [Fact]
+    public void DeleteBankAccount_Should_Call_Delete_And_Return_True_When_Account_Exists()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(true);
+        _accountRepositoryMock.Setup(r => r.Delete(id)).Returns(true);
 
         // Act
-        var result = _accountFacade.DeleteBankAccount(bankAccountId);
+        var result = _accountFacade.DeleteBankAccount(id);
 
         // Assert
         Assert.True(result);
-        _accountRepositoryMock.Verify(ar => ar.Delete(bankAccountId), Times.Once);
+        _accountRepositoryMock.Verify(r => r.Delete(id), Times.Once);
     }
 
     [Fact]
-    public void GetAllBankAccounts_Should_Return_All_BankAccounts_From_Repository()
+    public void GetAllBankAccounts_Should_Return_All_BankAccounts()
     {
         // Arrange
-        var bankAccounts = _fixture.CreateMany<BankAccount>(3);
-        _accountRepositoryMock
-            .Setup(ar => ar.GetAll())
-            .Returns(bankAccounts);
+        var accounts = _fixture.CreateMany<BankAccount>(3);
+        _accountRepositoryMock.Setup(r => r.GetAll()).Returns(accounts);
 
         // Act
         var result = _accountFacade.GetAllBankAccounts();
 
         // Assert
-        Assert.Equal(bankAccounts, result);
+        Assert.Equal(accounts, result);
     }
 
     [Fact]
-    public void AccountExists_Should_Return_Repository_Result()
+    public void AccountExists_Should_Return_True_If_Account_Exists()
     {
         // Arrange
-        var accountId = Guid.NewGuid();
-        _accountRepositoryMock
-            .Setup(ar => ar.Exists(accountId))
-            .Returns(true);
+        var id = Guid.NewGuid();
+        _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(true);
 
         // Act
-        var result = _accountFacade.AccountExists(accountId);
+        var result = _accountFacade.AccountExists(id);
 
         // Assert
         Assert.True(result);
+    }
+
+    [Fact]
+    public void AccountExists_Should_Return_False_If_Account_Does_Not_Exist()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(false);
+
+        // Act
+        var result = _accountFacade.AccountExists(id);
+
+        // Assert
+        Assert.False(result);
     }
 }

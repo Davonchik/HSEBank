@@ -28,4 +28,8 @@ public interface IFinancialFacade
     IEnumerable<Operation> GetAllOperations();
     IEnumerable<BankAccount> GetAllBankAccounts();
     IEnumerable<Category> GetAllCategories();
+
+    public decimal GetBalanceDifference(FinancialDataDto data, DateTime start, DateTime end);
+
+    public Dictionary<Guid, List<Operation>> GroupOperationsByCategory(FinancialDataDto data);
 }

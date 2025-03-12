@@ -40,11 +40,19 @@ public class FinancialFactory : IFinancialFactory
 
     public Category CreateCategory(CategoryDto categoryDto)
     {
-        return new Category
+        var category = new Category()
         {
-            Id = Guid.NewGuid(),
             Name = categoryDto.Name,
             Type = categoryDto.Type
         };
+
+        if (categoryDto.CategoryId.HasValue)
+        {
+            category.Id = categoryDto.CategoryId.Value;
+            return category;
+        }
+        
+        category.Id = Guid.NewGuid();
+        return category;
     }
 }

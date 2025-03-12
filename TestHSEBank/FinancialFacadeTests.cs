@@ -1,565 +1,305 @@
 using System.Reflection;
+using HSEBank.Presentation.Common;
 using AutoFixture;
 using HSEBank.BusinessLogic.Dto;
-using HSEBank.BusinessLogic.Services;
+using HSEBank.BusinessLogic.Services.Abstractions;
 using HSEBank.BusinessLogic.Services.Facades;
-using HSEBank.BusinessLogic.Shared;
 using HSEBank.DataAccess.Models;
 using HSEBank.Presentation;
 using Moq;
+using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace TestHSEBank;
 
 public class FinancialFacadeTests
 {
-    private readonly Mock<IAccountFacade> _accountMock;
-    private readonly Mock<ICategoryFacade> _categoryMock;
-    private readonly Mock<IOperationFacade> _operationMock;
-    private readonly Mock<AnalyticsService> _analyticsServiceMock;
+    private readonly Mock<IAccountFacade> _accountFacadeMock;
+    private readonly Mock<ICategoryFacade> _categoryFacadeMock;
+    private readonly Mock<IOperationFacade> _operationFacadeMock;
+    private readonly Mock<IAnalyticsService> _analyticsServiceMock;
     private readonly Fixture _fixture;
-
+    private FinancialFacade _facade;
+    
     public FinancialFacadeTests()
     {
         // Сброс синглтона для независимости тестов.
         typeof(FinancialFacade)
             .GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic)
             ?.SetValue(null, null);
-
-        _accountMock = new Mock<IAccountFacade>();
-        _categoryMock = new Mock<ICategoryFacade>();
-        _operationMock = new Mock<IOperationFacade>();
-        _analyticsServiceMock = new Mock<AnalyticsService>();
+            
+        _accountFacadeMock = new Mock<IAccountFacade>();
+        _categoryFacadeMock = new Mock<ICategoryFacade>();
+        _operationFacadeMock = new Mock<IOperationFacade>();
+        _analyticsServiceMock = new Mock<IAnalyticsService>();
         _fixture = new Fixture();
-    }
-
-    [Fact]
-    public void Throw_Exception_If_No_Such_Category()
-    {
-        _categoryMock.Setup(f => f.CategoryExists(It.IsAny<Guid>())).Returns(false);
-        _accountMock.Setup(f => f.AccountExists(It.IsAny<Guid>())).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
+        _facade = FinancialFacade.GetInstance(
+            _accountFacadeMock.Object,
+            _categoryFacadeMock.Object,
+            _operationFacadeMock.Object,
             _analyticsServiceMock.Object);
-
-        OperationDto operationDto = _fixture.Build<OperationDto>()
-            .With(dto => dto.Type, OperationType.Expense)
-            .Create<OperationDto>();
-
-        Assert.Throws<ArgumentException>(() => financialFacade.CreateOperation(operationDto));
     }
-
-    [Fact]
-    public void Throw_Exception_If_No_Such_Account_On_CreateOperation()
-    {
-        _accountMock.Setup(f => f.AccountExists(It.IsAny<Guid>())).Returns(false);
-        _categoryMock.Setup(f => f.CategoryExists(It.IsAny<Guid>())).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        OperationDto operationDto = _fixture.Create<OperationDto>();
-
-        Assert.Throws<ArgumentException>(() => financialFacade.CreateOperation(operationDto));
-    }
-
-    [Fact]
-    public void CreateOperation_Success()
-    {
-        OperationDto operationDto = _fixture.Create<OperationDto>();
-        var expectedOperation = _fixture.Create<Operation>();
-
-        _accountMock.Setup(f => f.AccountExists(operationDto.BankAccountId)).Returns(true);
-        _categoryMock.Setup(f => f.CategoryExists(operationDto.CategoryId)).Returns(true);
-        _operationMock.Setup(f => f.Create(operationDto)).Returns(expectedOperation);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.CreateOperation(operationDto);
-
-        Assert.Equal(expectedOperation, result);
-    }
-
-    [Fact]
-    public void EditOperation_Throws_Exception_When_Category_Not_Exist()
-    {
-        var editOperationDto = _fixture.Create<EditOperationDto>();
-        _categoryMock.Setup(f => f.CategoryExists(editOperationDto.CategoryId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.EditOperation(editOperationDto));
-    }
-
-    [Fact]
-    public void EditOperation_Success()
-    {
-        var editOperationDto = _fixture.Create<EditOperationDto>();
-        _categoryMock.Setup(f => f.CategoryExists(editOperationDto.CategoryId)).Returns(true);
-        _operationMock.Setup(f => f.EditOperation(editOperationDto)).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.EditOperation(editOperationDto);
-
-        Assert.True(result);
-    }
-
-    [Fact]
-    public void DeleteOperation_Throws_Exception_When_Operation_Not_Exist()
-    {
-        Guid operationId = Guid.NewGuid();
-        _operationMock.Setup(f => f.OperationExists(operationId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.DeleteOperation(operationId));
-    }
-
-    [Fact]
-    public void DeleteOperation_Success()
-    {
-        Guid operationId = Guid.NewGuid();
-        _operationMock.Setup(f => f.OperationExists(operationId)).Returns(true);
-        _operationMock.Setup(f => f.DeleteOperation(operationId)).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.DeleteOperation(operationId);
-
-        Assert.True(result);
-    }
-
-    [Fact]
-    public void GetOperation_Throws_Exception_When_Operation_Not_Exist()
-    {
-        Guid operationId = Guid.NewGuid();
-        _operationMock.Setup(f => f.OperationExists(operationId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.GetOperation(operationId));
-    }
-
-    [Fact]
-    public void GetOperation_Success()
-    {
-        Guid operationId = Guid.NewGuid();
-        var expectedOperation = _fixture.Create<Operation>();
-
-        _operationMock.Setup(f => f.OperationExists(operationId)).Returns(true);
-        _operationMock.Setup(f => f.GetById(operationId)).Returns(expectedOperation);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.GetOperation(operationId);
-
-        Assert.Equal(expectedOperation, result);
-    }
-
-    [Fact]
-    public void CreateBankAccount_Success()
-    {
-        var bankAccountDto = _fixture.Create<BankAccountDto>();
-        var expectedAccount = _fixture.Create<BankAccount>();
     
-        _accountMock.Setup(f => f.Create(bankAccountDto)).Returns(expectedAccount);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.CreateBankAccount(bankAccountDto);
-
-        Assert.Equal(expectedAccount.Name, result.Name);
-    }
-
     [Fact]
-    public void EditBankAccount_Throws_Exception_If_Account_Does_Not_Exist()
+    public void CreateOperation_Throws_Exception_When_Account_DoesNotExist()
     {
-        var editBankAccountDto = _fixture.Create<EditBankAccountDto>();
-        _accountMock.Setup(f => f.AccountExists(editBankAccountDto.BankAccountId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.EditBankAccount(editBankAccountDto));
+        var operationDto = _fixture.Create<OperationDto>();
+        _accountFacadeMock.Setup(a => a.AccountExists(operationDto.BankAccountId)).Returns(false);
+        
+        var ex = Assert.Throws<ArgumentException>(() => _facade.CreateOperation(operationDto));
+        Assert.Equal($"Account does not exist {nameof(operationDto.BankAccountId)}", ex.Message);
     }
-
+    
     [Fact]
-    public void EditBankAccount_Success()
+    public void CreateOperation_Throws_Exception_When_Category_DoesNotExist()
     {
-        var editBankAccountDto = _fixture.Create<EditBankAccountDto>();
-        _accountMock.Setup(f => f.AccountExists(editBankAccountDto.BankAccountId)).Returns(true);
-        _accountMock.Setup(f => f.EditBankAccount(editBankAccountDto)).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.EditBankAccount(editBankAccountDto);
-
+        var operationDto = _fixture.Create<OperationDto>();
+        _accountFacadeMock.Setup(a => a.AccountExists(operationDto.BankAccountId)).Returns(true);
+        _categoryFacadeMock.Setup(c => c.CategoryExists(operationDto.CategoryId)).Returns(false);
+        
+        var ex = Assert.Throws<ArgumentException>(() => _facade.CreateOperation(operationDto));
+        Assert.Equal($"Category does not exist {nameof(operationDto.CategoryId)}", ex.Message);
+    }
+    
+    [Fact]
+    public void CreateOperation_Sets_Type_From_Category_And_Calls_Create()
+    {
+        var operationDto = _fixture.Create<OperationDto>();
+        var category = _fixture.Create<Category>();
+        _accountFacadeMock.Setup(a => a.AccountExists(operationDto.BankAccountId)).Returns(true);
+        _categoryFacadeMock.Setup(c => c.CategoryExists(operationDto.CategoryId)).Returns(true);
+        _categoryFacadeMock.Setup(c => c.GetById(operationDto.CategoryId)).Returns(category);
+        var expectedOperation = _fixture.Create<Operation>();
+        _operationFacadeMock.Setup(o => o.Create(operationDto)).Returns(expectedOperation);
+        
+        var result = _facade.CreateOperation(operationDto);
+        
+        // Проверяем, что тип операции устанавливается из категории
+        Assert.Equal(category.Type, operationDto.Type);
+        Assert.Equal(expectedOperation, result);
+    }
+    
+    [Fact]
+    public void EditOperation_Throws_Exception_When_Category_DoesNotExist()
+    {
+        var editDto = _fixture.Create<EditOperationDto>();
+        _categoryFacadeMock.Setup(c => c.CategoryExists(editDto.CategoryId)).Returns(false);
+        
+        var ex = Assert.Throws<ArgumentException>(() => _facade.EditOperation(editDto));
+        Assert.Equal($"Category does not exist {nameof(editDto.CategoryId)}", ex.Message);
+    }
+    
+    [Fact]
+    public void EditOperation_Returns_True_When_Update_Succeeds()
+    {
+        var editDto = _fixture.Create<EditOperationDto>();
+        _categoryFacadeMock.Setup(c => c.CategoryExists(editDto.CategoryId)).Returns(true);
+        _operationFacadeMock.Setup(o => o.EditOperation(editDto)).Returns(true);
+        
+        var result = _facade.EditOperation(editDto);
         Assert.True(result);
     }
-
+    
     [Fact]
-    public void DeleteBankAccount_Throws_Exception_If_Account_Does_Not_Exist()
+    public void DeleteOperation_Returns_Result_From_OperationFacade()
     {
-        Guid bankAccountId = Guid.NewGuid();
-        _accountMock.Setup(f => f.AccountExists(bankAccountId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.DeleteBankAccount(bankAccountId));
-    }
-
-    [Fact]
-    public void DeleteBankAccount_Success()
-    {
-        Guid bankAccountId = Guid.NewGuid();
-        _accountMock.Setup(f => f.AccountExists(bankAccountId)).Returns(true);
-        _accountMock.Setup(f => f.DeleteBankAccount(bankAccountId)).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.DeleteBankAccount(bankAccountId);
-
+        Guid opId = Guid.NewGuid();
+        _operationFacadeMock.Setup(o => o.DeleteOperation(opId)).Returns(true);
+        
+        var result = _facade.DeleteOperation(opId);
         Assert.True(result);
     }
-
+    
     [Fact]
-    public void GetBankAccount_Throws_Exception_If_Account_Does_Not_Exist()
+    public void GetOperation_Returns_Operation_When_It_Exists()
     {
-        Guid bankAccountId = Guid.NewGuid();
-        _accountMock.Setup(f => f.AccountExists(bankAccountId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.GetBankAccount(bankAccountId));
+        Guid opId = Guid.NewGuid();
+        var expectedOperation = _fixture.Create<Operation>();
+        _operationFacadeMock.Setup(o => o.GetById(opId)).Returns(expectedOperation);
+        
+        var result = _facade.GetOperation(opId);
+        Assert.Equal(expectedOperation, result);
     }
-
+    
     [Fact]
-    public void GetBankAccount_Success()
+    public void EditBankAccount_Delegates_To_AccountFacade()
     {
-        Guid bankAccountId = Guid.NewGuid();
-        var expectedAccount = _fixture.Create<BankAccount>();
-
-        _accountMock.Setup(f => f.AccountExists(bankAccountId)).Returns(true);
-        _accountMock.Setup(f => f.GetById(bankAccountId)).Returns(expectedAccount);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.GetBankAccount(bankAccountId);
-
-        Assert.Equal(expectedAccount, result);
+        var editDto = _fixture.Create<EditBankAccountDto>();
+        _accountFacadeMock.Setup(a => a.EditBankAccount(editDto)).Returns(true);
+        
+        var result = _facade.EditBankAccount(editDto);
+        Assert.True(result);
     }
-
-    // [Fact]
-    // public void CreateCategory_Throws_Exception_If_Category_Already_Exists()
-    // {
-    //     var categoryDto = _fixture.Create<CategoryDto>();
-    //
-    //     var financialFacade = FinancialFacade.GetInstance(_accountMock.Object, _categoryMock.Object, _operationMock.Object);
-    //     financialFacade.CreateCategory(categoryDto);
-    //     Assert.Throws<ArgumentException>(() => financialFacade.CreateCategory(categoryDto));
-    // }
-
+    
     [Fact]
-    public void CreateCategory_Success()
+    public void DeleteBankAccount_Delegates_To_AccountFacade()
+    {
+        Guid id = Guid.NewGuid();
+        _accountFacadeMock.Setup(a => a.DeleteBankAccount(id)).Returns(true);
+        
+        var result = _facade.DeleteBankAccount(id);
+        Assert.True(result);
+    }
+    
+    [Fact]
+    public void GetBankAccount_Delegates_To_AccountFacade()
+    {
+        Guid id = Guid.NewGuid();
+        var account = _fixture.Create<BankAccount>();
+        _accountFacadeMock.Setup(a => a.GetById(id)).Returns(account);
+        
+        var result = _facade.GetBankAccount(id);
+        Assert.Equal(account, result);
+    }
+    
+    [Fact]
+    public void CreateCategory_Delegates_To_CategoryFacade()
     {
         var categoryDto = _fixture.Create<CategoryDto>();
-        var expectedCategory = _fixture.Create<Category>();
-
-        _categoryMock.Setup(f => f.Create(categoryDto)).Returns(expectedCategory);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.CreateCategory(categoryDto);
-
-        Assert.Equal(expectedCategory, result);
+        var category = _fixture.Create<Category>();
+        _categoryFacadeMock.Setup(c => c.Create(categoryDto)).Returns(category);
+        
+        var result = _facade.CreateCategory(categoryDto);
+        Assert.Equal(category, result);
     }
-
+    
     [Fact]
-    public void EditCategory_Success()
+    public void EditCategory_Delegates_To_CategoryFacade()
     {
-        var editCategoryDto = _fixture.Create<EditCategoryDto>();
-        _categoryMock.Setup(f => f.EditCategory(editCategoryDto)).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.EditCategory(editCategoryDto);
-
+        var editDto = _fixture.Create<EditCategoryDto>();
+        _categoryFacadeMock.Setup(c => c.EditCategory(editDto)).Returns(true);
+        
+        var result = _facade.EditCategory(editDto);
         Assert.True(result);
     }
-
+    
     [Fact]
-    public void DeleteCategory_Throws_Exception_If_Category_Does_Not_Exist()
+    public void DeleteCategory_Delegates_To_CategoryFacade()
     {
-        Guid categoryId = Guid.NewGuid();
-        _categoryMock.Setup(f => f.CategoryExists(categoryId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.DeleteCategory(categoryId));
-    }
-
-    [Fact]
-    public void DeleteCategory_Success()
-    {
-        Guid categoryId = Guid.NewGuid();
-        _categoryMock.Setup(f => f.CategoryExists(categoryId)).Returns(true);
-        _categoryMock.Setup(f => f.DeleteCategory(categoryId)).Returns(true);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.DeleteCategory(categoryId);
-
+        Guid id = Guid.NewGuid();
+        _categoryFacadeMock.Setup(c => c.DeleteCategory(id)).Returns(true);
+        
+        var result = _facade.DeleteCategory(id);
         Assert.True(result);
     }
-
+    
     [Fact]
-    public void GetCategory_Throws_Exception_If_Category_Does_Not_Exist()
+    public void GetCategory_Delegates_To_CategoryFacade()
     {
-        Guid categoryId = Guid.NewGuid();
-        _categoryMock.Setup(f => f.CategoryExists(categoryId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.GetCategory(categoryId));
+        Guid id = Guid.NewGuid();
+        var category = _fixture.Create<Category>();
+        _categoryFacadeMock.Setup(c => c.GetById(id)).Returns(category);
+        
+        var result = _facade.GetCategory(id);
+        Assert.Equal(category, result);
     }
-
+    
     [Fact]
-    public void GetCategory_Success()
-    {
-        Guid categoryId = Guid.NewGuid();
-        var expectedCategory = _fixture.Create<Category>();
-
-        _categoryMock.Setup(f => f.CategoryExists(categoryId)).Returns(true);
-        _categoryMock.Setup(f => f.GetById(categoryId)).Returns(expectedCategory);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.GetCategory(categoryId);
-
-        Assert.Equal(expectedCategory, result);
-    }
-
-    [Fact]
-    public void RecalculateBalance_Throws_Exception_If_Account_Does_Not_Exist()
+    public void RecalculateBalance_Throws_Exception_When_Account_DoesNotExist()
     {
         Guid bankAccountId = Guid.NewGuid();
-        _accountMock.Setup(f => f.AccountExists(bankAccountId)).Returns(false);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        Assert.Throws<ArgumentException>(() => financialFacade.RecalculateBalance(bankAccountId));
+        _accountFacadeMock.Setup(a => a.AccountExists(bankAccountId)).Returns(false);
+    
+        var ex = Assert.Throws<ArgumentException>(() => _facade.RecalculateBalance(bankAccountId));
+        // Обратите внимание, что nameof(bankAccountId) возвращает "bankAccountId"
+        Assert.Equal($"Account does not exist bankAccountId", ex.Message);
     }
-
+    
     [Fact]
-    public void RecalculateBalance_Success()
+    public void RecalculateBalance_Returns_Correct_Balance()
     {
-        Guid bankAccountId = Guid.NewGuid();
-        // Предположим, что у нас есть операции: доход 100, расход 50, доход 30, итог = 80
+        Guid id = Guid.NewGuid();
+        _accountFacadeMock.Setup(a => a.AccountExists(id)).Returns(true);
+        // Создаем операции: доход 100, расход 50, доход 30 => баланс 80
         var operations = new List<Operation>
         {
-            new Operation { BankAccountId = bankAccountId, Type = OperationType.Income, Amount = 100 },
-            new Operation { BankAccountId = bankAccountId, Type = OperationType.Expense, Amount = 50 },
-            new Operation { BankAccountId = bankAccountId, Type = OperationType.Income, Amount = 30 }
+            new Operation { BankAccountId = id, Type = Type.Income, Amount = 100 },
+            new Operation { BankAccountId = id, Type = Type.Expense, Amount = 50 },
+            new Operation { BankAccountId = id, Type = Type.Income, Amount = 30 }
         };
-
-        _accountMock.Setup(f => f.AccountExists(bankAccountId)).Returns(true);
-        _operationMock.Setup(f => f.GetByCondition(It.IsAny<Func<Operation, bool>>()))
-                      .Returns(operations);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var balance = financialFacade.RecalculateBalance(bankAccountId);
-
-        Assert.Equal(80, balance);
+        _operationFacadeMock.Setup(o => o.GetByCondition(It.IsAny<Func<Operation, bool>>()))
+            .Returns(operations);
+        
+        var result = _facade.RecalculateBalance(id);
+        Assert.Equal(80, result);
     }
-
+    
+    // [Fact]
+    // public void ExportAccountsFromJson_Creates_File_With_Exported_Data()
+    // {
+    //     // Настраиваем GetAllBankAccounts для возврата списка аккаунтов
+    //     var accounts = _fixture.CreateMany<BankAccount>(2).ToList();
+    //     // Для теста зададим простую реализацию метода Accept через делегат (если Account.Accept является виртуальным или публичным)
+    //     foreach (var account in accounts)
+    //     {
+    //         account.Accept = visitor => { /* ничего не делаем для теста */ };
+    //     }
+    //     _accountFacadeMock.Setup(a => a.GetAllBankAccounts()).Returns(accounts);
+    //     
+    //     var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".json");
+    //     
+    //     _facade.ExportAccountsFromJson(tempFile);
+    //     
+    //     Assert.True(File.Exists(tempFile));
+    //     var content = File.ReadAllText(tempFile);
+    //     Assert.False(string.IsNullOrWhiteSpace(content));
+    //     
+    //     File.Delete(tempFile);
+    // }
+    
     [Fact]
-    public void GetAllOperations_Success()
+    public void GetBalanceDifference_Returns_Value_From_AnalyticsService()
+    {
+        var data = _fixture.Create<FinancialDataDto>();
+        DateTime start = DateTime.Now.AddDays(-10);
+        DateTime end = DateTime.Now;
+        decimal expectedDiff = 123.45m;
+        _analyticsServiceMock.Setup(a => a.GetBalanceDifference(data, start, end)).Returns(expectedDiff);
+        
+        var result = _facade.GetBalanceDifference(data, start, end);
+        Assert.Equal(expectedDiff, result);
+    }
+    
+    [Fact]
+    public void GroupOperationsByCategory_Returns_Dictionary_From_AnalyticsService()
+    {
+        var data = _fixture.Create<FinancialDataDto>();
+        var expectedDict = new Dictionary<Guid, List<Operation>>
+        {
+            { Guid.NewGuid(), _fixture.CreateMany<Operation>(2).ToList() }
+        };
+        _analyticsServiceMock.Setup(a => a.GroupOperationsByCategory(data)).Returns(expectedDict);
+        
+        var result = _facade.GroupOperationsByCategory(data);
+        Assert.Equal(expectedDict, result);
+    }
+    
+    [Fact]
+    public void GetAllOperations_Delegates_To_OperationFacade()
     {
         var operations = _fixture.CreateMany<Operation>(3);
-        _operationMock.Setup(f => f.GetAllOperations()).Returns(operations);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.GetAllOperations();
-
+        _operationFacadeMock.Setup(o => o.GetAllOperations()).Returns(operations);
+        
+        var result = _facade.GetAllOperations();
         Assert.Equal(operations, result);
     }
-
+    
     [Fact]
-    public void GetAllBankAccounts_Success()
+    public void GetAllBankAccounts_Delegates_To_AccountFacade()
     {
         var accounts = _fixture.CreateMany<BankAccount>(3);
-        _accountMock.Setup(f => f.GetAllBankAccounts()).Returns(accounts);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.GetAllBankAccounts();
-
+        _accountFacadeMock.Setup(a => a.GetAllBankAccounts()).Returns(accounts);
+        
+        var result = _facade.GetAllBankAccounts();
         Assert.Equal(accounts, result);
     }
-
+    
     [Fact]
-    public void GetAllCategories_Success()
+    public void GetAllCategories_Delegates_To_CategoryFacade()
     {
         var categories = _fixture.CreateMany<Category>(3);
-        _categoryMock.Setup(f => f.GetAllCategories()).Returns(categories);
-
-        var financialFacade = FinancialFacade.GetInstance(
-            _accountMock.Object, 
-            _categoryMock.Object, 
-            _operationMock.Object, 
-            _analyticsServiceMock.Object);
-
-        var result = financialFacade.GetAllCategories();
-
+        _categoryFacadeMock.Setup(c => c.GetAllCategories()).Returns(categories);
+        
+        var result = _facade.GetAllCategories();
         Assert.Equal(categories, result);
-    }
-
-    //--------------
-
-    [Fact]
-    public void FinancialDataDto_DefaultProperties_AreNull()
-    {
-        // При создании объекта без инициализации свойства должны быть null
-        var dto = new FinancialDataDto();
-
-        Assert.Null(dto.BankAccounts);
-        Assert.Null(dto.Categories);
-        Assert.Null(dto.Operations);
-    }
-
-    [Fact]
-    public void FinancialDataDto_PropertyAssignment_WorksCorrectly()
-    {
-        // Arrange - создаём тестовые данные
-        var bankAccounts = new List<BankAccount>
-        {
-            new BankAccount { Id = Guid.NewGuid() }
-        };
-
-        var categories = new List<Category>
-        {
-            new Category { Id = Guid.NewGuid() }
-        };
-
-        var operations = new List<Operation>
-        {
-            new Operation { Id = Guid.NewGuid() }
-        };
-
-        // Act - присваиваем значения свойствам
-        var dto = new FinancialDataDto
-        {
-            BankAccounts = bankAccounts,
-            Categories = categories,
-            Operations = operations
-        };
-
-        // Assert - проверяем, что значения корректно установлены
-        Assert.Equal(bankAccounts, dto.BankAccounts);
-        Assert.Equal(categories, dto.Categories);
-        Assert.Equal(operations, dto.Operations);
     }
 }
