@@ -7,13 +7,6 @@ namespace HSEBank.BusinessLogic.Services;
 
 public class AnalyticsService : IAnalyticsService
 {
-    private readonly IFinancialFacade _facade;
-
-    public AnalyticsService(IFinancialFacade facade)
-    {
-        _facade = facade;
-    }
-
     public decimal GetBalanceDifference(FinancialDataDto data, DateTime startDate, DateTime endDate)
     {
         decimal totalIncome = data.Operations
