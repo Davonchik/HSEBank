@@ -26,16 +26,28 @@ public class OperationFacade : IOperationFacade
 
     public Operation GetById(Guid id)
     {
+        if (!OperationExists(id))
+        {
+            throw new ArgumentException($"Operation with id {id} does not exist");
+        }
         return _operationRepository.GetById(id);
     }
 
     public bool EditOperation(EditOperationDto editOperationDto)
     {
+        if (!OperationExists(editOperationDto.OperationId))
+        {
+            throw new ArgumentException($"Operation with id {editOperationDto.OperationId} does not exist");
+        }
         return _operationRepository.Update(editOperationDto);
     }
 
     public bool DeleteOperation(Guid id)
     {
+        if (!OperationExists(id))
+        {
+            throw new ArgumentException($"Operation with id {id} does not exist");
+        }
         return _operationRepository.Delete(id);
     }
 
@@ -46,6 +58,10 @@ public class OperationFacade : IOperationFacade
 
     public IEnumerable<Operation> GetByCondition(Func<Operation, bool> condition)
     {
+        if (!_operationRepository.GetByCondition(condition).Any())
+        {
+            throw new ArgumentException($"No operations found for condition {condition}");
+        }
         return _operationRepository.GetByCondition(condition);
     }
 

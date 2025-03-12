@@ -1,4 +1,6 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ACastleProxyFactory_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F4e8315746988a4c77acdb2357d1b9f99c910c1fb9ee86eed9510dbfbfda7_003FCastleProxyFactory_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AExceptionAsserts_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F9ba71596a5a0485cfe349ca0946d8092d25a69b4d3dad4374f80ef8d4d5a9dd4_003FExceptionAsserts_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b63cda1_002Df98b_002D4344_002Da73a_002Dc5ddb97dd71e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Throw_Exception_If_No_Such_Category" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
@@ -14,5 +16,8 @@
     &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.DeleteOperation_Throws_Exception_When_Operation_Not_Exist&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.DeleteOperation_Success&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialDataDtoTests.FinancialDataDto_PropertyAssignment_WorksCorrectly&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateBankAccount_Success&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateCategory_Success&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateCategory_Throws_Exception_If_Category_Already_Exists&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

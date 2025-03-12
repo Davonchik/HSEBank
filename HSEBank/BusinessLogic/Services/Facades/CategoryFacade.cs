@@ -19,6 +19,10 @@ public class CategoryFacade : ICategoryFacade
 
     public Category Create(CategoryDto categoryDto)
     {
+        if (_categoryRepository.GetAll().Any(x => x.Name == categoryDto.Name && x.Type == categoryDto.Type))
+        {
+            throw new ArgumentException($"Category with name {categoryDto.Name} and type {categoryDto.Type} already exists");
+        }
         var newCategory = _financialFactory.CreateCategory(categoryDto);
         _categoryRepository.Create(newCategory);
         return newCategory;
@@ -26,16 +30,28 @@ public class CategoryFacade : ICategoryFacade
 
     public Category GetById(Guid id)
     {
+        if (!CategoryExists(id))
+        {
+            throw new ArgumentException($"Category with id {id} does not exist");
+        }
         return _categoryRepository.GetById(id);
     }
 
     public bool EditCategory(EditCategoryDto dto)
     {
+        if (!CategoryExists(dto.CategoryId))
+        {
+            throw new ArgumentException($"Category with id {dto.CategoryId} does not exist");
+        }
         return _categoryRepository.Update(dto);
     }
 
     public bool DeleteCategory(Guid id)
     {
+        if (!CategoryExists(id))
+        {
+            throw new ArgumentException($"Category with id {id} does not exist");
+        }
         return _categoryRepository.Delete(id);
     }
 
@@ -46,6 +62,10 @@ public class CategoryFacade : ICategoryFacade
 
     public IEnumerable<Category> GetByCondition(Func<Category, bool> predicate)
     {
+        if (!_categoryRepository.GetByCondition(predicate).Any())
+        {
+            throw new ArgumentException($"No operations found for condition {predicate}");
+        }
         return _categoryRepository.GetByCondition(predicate);
     }
 

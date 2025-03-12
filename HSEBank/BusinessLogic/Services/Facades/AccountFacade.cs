@@ -26,16 +26,28 @@ public class AccountFacade : IAccountFacade
 
     public BankAccount GetById(Guid id)
     {
+        if (!AccountExists(id))
+        {
+            throw new ArgumentException($"Account with id {id} does not exist");
+        }
         return _accountRepository.GetById(id);
     }
 
     public bool EditBankAccount(EditBankAccountDto accountDto)
     {
+        if (!AccountExists(accountDto.BankAccountId))
+        {
+            throw new ArgumentException($"Account with id {accountDto.BankAccountId} does not exist");
+        }
         return _accountRepository.Update(accountDto);
     }
 
     public bool DeleteBankAccount(Guid bankAccountId)
     {
+        if (!AccountExists(bankAccountId))
+        {
+            throw new ArgumentException($"Account with id {bankAccountId} does not exist");
+        }
         return _accountRepository.Delete(bankAccountId);
     }
 

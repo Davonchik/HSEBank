@@ -1,4 +1,5 @@
 using HSEBank.BusinessLogic.Dto;
+using HSEBank.BusinessLogic.Services;
 using HSEBank.BusinessLogic.Services.Abstractions;
 using HSEBank.BusinessLogic.Services.Facades;
 using HSEBank.DataAccess.Models;
@@ -12,33 +13,34 @@ public class FinancialFacade : IFinancialFacade
     private readonly IAccountFacade _accountFacade;
     private readonly ICategoryFacade _categoryFacade;
     private readonly IOperationFacade _operationFacade;
-    // private readonly IFinancialFacade _financialFacade;
+    private readonly AnalyticsService _analyticsService;
 
     private FinancialFacade(
         IAccountFacade accountFacade,
         ICategoryFacade categoryFacade,
-        IOperationFacade operationFacade)
+        IOperationFacade operationFacade,
+        AnalyticsService analyticsService)
     {
         _accountFacade = accountFacade;
         _categoryFacade = categoryFacade;
         _operationFacade = operationFacade;
-        // _financialFacade = financialFacade;
+        _analyticsService = analyticsService;
     }
 
     public static FinancialFacade GetInstance(IAccountFacade accountFacade,
         ICategoryFacade categoryFacade,
-        IOperationFacade operationFacade)
+        IOperationFacade operationFacade,
+        AnalyticsService analyticsService)
     {
         if(_instance == null)
         {
-            _instance = new FinancialFacade(accountFacade, categoryFacade, operationFacade);
+            _instance = new FinancialFacade(accountFacade, categoryFacade, operationFacade, analyticsService);
         }
         return _instance;
     }
     
     public Operation CreateOperation(OperationDto operationDto)
     {
-        // сделать ли проверку, что есть уже такая операция ?
         if (!_accountFacade.AccountExists(operationDto.BankAccountId))
         {
             throw new ArgumentException($"Account does not exist {nameof(operationDto.BankAccountId)}");
@@ -62,64 +64,36 @@ public class FinancialFacade : IFinancialFacade
 
     public bool DeleteOperation(Guid operationId)
     {
-        if (!_operationFacade.OperationExists(operationId))
-        {
-            throw new ArgumentException($"Operation does not exist {nameof(operationId)}");
-        }
         return _operationFacade.DeleteOperation(operationId);
     }
 
     public Operation GetOperation(Guid operationId)
     {
-        if (!_operationFacade.OperationExists(operationId))
-        {
-            throw new ArgumentException($"Operation does not exist {nameof(operationId)}");
-        }
         return _operationFacade.GetById(operationId);
     }
 
     public BankAccount CreateBankAccount(BankAccountDto bankAccountDto)
     {
-        if (_accountFacade.AccountExists(bankAccountDto.AccountId))
-        {
-            throw new ArgumentException($"Account is already exist {nameof(bankAccountDto.AccountId)}");
-        }
         return _accountFacade.Create(bankAccountDto);
     }
 
     public bool EditBankAccount(EditBankAccountDto editBankAccountDto)
     {
-        if (!_accountFacade.AccountExists(editBankAccountDto.BankAccountId))
-        {
-            throw new ArgumentException($"Account does not exist {nameof(editBankAccountDto.BankAccountId)}");
-        }
         return _accountFacade.EditBankAccount(editBankAccountDto);
     }
 
     public bool DeleteBankAccount(Guid bankAccountId)
     {
-        if (!_accountFacade.AccountExists(bankAccountId))
-        {
-            throw new ArgumentException($"Account does not exist {nameof(bankAccountId)}");
-        }
         return _accountFacade.DeleteBankAccount(bankAccountId);
     }
 
     public BankAccount GetBankAccount(Guid bankAccountId)
     {
-        if (!_accountFacade.AccountExists(bankAccountId))
-        {
-            throw new ArgumentException($"Account does not exist {nameof(bankAccountId)}");
-        }
         return _accountFacade.GetById(bankAccountId);
     }
 
     public Category CreateCategory(CategoryDto categoryDto)
     {
-        if (_categoryFacade.CategoryExists(categoryDto.CategoryId))
-        {
-            throw new ArgumentException($"Category is already exist {nameof(categoryDto.CategoryId)}");
-        }
         return _categoryFacade.Create(categoryDto);
     }
 
@@ -130,19 +104,11 @@ public class FinancialFacade : IFinancialFacade
 
     public bool DeleteCategory(Guid categoryId)
     {
-        if (!_categoryFacade.CategoryExists(categoryId))
-        {
-            throw new ArgumentException($"Category does not exist {nameof(categoryId)}");
-        }
         return _categoryFacade.DeleteCategory(categoryId);
     }
 
     public Category GetCategory(Guid categoryId)
     {
-        if (!_categoryFacade.CategoryExists(categoryId))
-        {
-            throw new ArgumentException($"Category does not exist {nameof(categoryId)}");
-        }
         return _categoryFacade.GetById(categoryId);
     }
 
@@ -158,6 +124,16 @@ public class FinancialFacade : IFinancialFacade
             balance += (op.Type == BusinessLogic.Shared.OperationType.Income ? op.Amount : -op.Amount);
         }
         return balance;
+    }
+
+    public decimal GetBalanceDifference(FinancialDataDto data, DateTime start, DateTime end)
+    {
+        return _analyticsService.GetBalanceDifference(data, start, end);
+    }
+
+    public Dictionary<Guid, List<Operation>> GroupOperationsByCategory(FinancialDataDto data)
+    {
+        return _analyticsService.GroupOperationsByCategory(data);
     }
 
     public IEnumerable<Operation> GetAllOperations() => _operationFacade.GetAllOperations();
