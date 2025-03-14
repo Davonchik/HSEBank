@@ -7,5 +7,7 @@ namespace HSEBank.BusinessLogic.Services.Abstractions;
 /// </summary>
 public interface IDataExportVisitor
 {
+    public void SaveToFile(string filePath);
+    
     void Visit(IVisitable visitable);
 }

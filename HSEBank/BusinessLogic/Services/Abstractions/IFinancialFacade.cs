@@ -29,6 +29,14 @@ public interface IFinancialFacade
     IEnumerable<BankAccount> GetAllBankAccounts();
     IEnumerable<Category> GetAllCategories();
 
+    public void ImportAccountsFromJson(string filePath);
+
+    public void ExportAccountsFromJson(string filePath);
+
+    public void ImportOperationsFromFile(string filePath);
+
+    public void ExportOperationsFromFile(string filePath);
+
     public decimal GetBalanceDifference(FinancialDataDto data, DateTime start, DateTime end);
 
     public Dictionary<Guid, List<Operation>> GroupOperationsByCategory(FinancialDataDto data);

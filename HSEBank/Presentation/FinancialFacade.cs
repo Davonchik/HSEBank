@@ -4,7 +4,6 @@ using HSEBank.BusinessLogic.Services.Abstractions;
 using HSEBank.BusinessLogic.Services.Facades;
 using HSEBank.DataAccess.Common.Enums;
 using HSEBank.DataAccess.Models;
-using HSEBank.Presentation.Common;
 using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace HSEBank.Presentation;
@@ -82,38 +81,7 @@ public class FinancialFacade : IFinancialFacade
 
     public BankAccount CreateBankAccount(BankAccountDto bankAccountDto)
     {
-        var account =  _accountFacade.Create(bankAccountDto);
-
-        Guid categoryId;
-
-        if (!_categoryFacade.CategoryExists(Guid.Parse(Constants.InitCategoryGuid)))
-        {
-            var category = CreateCategory(new CategoryDto()
-            {
-                Name = Constants.InitCategoryName,
-                CategoryId = Guid.Parse(Constants.InitCategoryGuid),
-                Type = Type.Income
-            });
-            
-            categoryId = category.Id;
-        }
-        else
-        {
-            categoryId = GetCategory(Guid.Parse(Constants.InitCategoryGuid)).Id;
-        }
-
-        var operation = new OperationDto()
-        {
-            Amount = 0,
-            BankAccountId = account.Id,
-            CategoryId = categoryId,
-            Description = "Initial bank account operation",
-            Type = Type.Income
-        };
-        
-        CreateOperation(operation);
-        
-        return account;
+        return _accountFacade.Create(bankAccountDto);
     }
 
     public bool EditBankAccount(EditBankAccountDto editBankAccountDto)
@@ -186,6 +154,58 @@ public class FinancialFacade : IFinancialFacade
         foreach (var account in accounts)
         {
             account.Accept(exportVisitor);
+        }
+        
+        exportVisitor.SaveToFile(filePath);
+    }
+    
+    // public void ImportOperationsFromJson(string filePath)
+    // {
+    //     var jsonImporter = new JsonDataImporter<OperationDto>();
+    //     
+    //     var operationDtos = jsonImporter.Import(filePath);
+    //
+    //     foreach (var op in operationDtos)
+    //     {
+    //         CreateOperation(op);
+    //     }
+    // }
+    //
+    // public void ExportOperationsFromJson(string filePath)
+    // {
+    //     var exportVisitor = new JsonAggregateExportVisitor();
+    //
+    //     var operations = GetAllOperations().ToList();
+    //
+    //     foreach (var op in operations)
+    //     {
+    //         op.Accept(exportVisitor);
+    //     }
+    //     
+    //     exportVisitor.SaveToFile(filePath);
+    // }
+    
+    public void ImportOperationsFromFile(string filePath)
+    {
+        var importer = DataTransferFactory.CreateImporter<OperationDto>(filePath);
+        
+        var operationDtos = importer.Import(filePath);
+
+        foreach (var op in operationDtos)
+        {
+            CreateOperation(op);
+        }
+    }
+
+    public void ExportOperationsFromFile(string filePath)
+    {
+        var exportVisitor = DataTransferFactory.CreateExporter(filePath);
+
+        var operations = GetAllOperations().ToList();
+
+        foreach (var op in operations)
+        {
+            op.Accept(exportVisitor);
         }
         
         exportVisitor.SaveToFile(filePath);

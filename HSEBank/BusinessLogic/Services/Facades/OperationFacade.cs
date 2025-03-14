@@ -58,11 +58,12 @@ public class OperationFacade : IOperationFacade
 
     public IEnumerable<Operation> GetByCondition(Func<Operation, bool> condition)
     {
-        if (!_operationRepository.GetByCondition(condition).Any())
+        var res = _operationRepository.GetByCondition(condition).ToList();
+        if (res.Count == 0)
         {
-            throw new ArgumentException($"No operations found for condition {condition}");
+            Console.WriteLine("Операции по запросу не найдены!");
         }
-        return _operationRepository.GetByCondition(condition);
+        return res;
     }
 
     public bool OperationExists(Guid id)

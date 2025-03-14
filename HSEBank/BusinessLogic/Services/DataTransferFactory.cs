@@ -2,7 +2,7 @@ using HSEBank.BusinessLogic.Services.Abstractions;
 
 namespace HSEBank.BusinessLogic.Services;
 
-public class DataImporterFactory
+public class DataTransferFactory
 {
     public static IDataImporter<T> CreateImporter<T>(string filePath) where T : new()
     {
@@ -14,6 +14,20 @@ public class DataImporterFactory
             ".csv" => new CsvDataImporter<T>(),
             ".yaml" => new YamlDataImporter<T>(),
             ".yml" => new YamlDataImporter<T>(),
+            _ => throw new NotSupportedException($"Формат файла {extension} не поддерживается.")
+        };
+    }
+    
+    public static IDataExportVisitor CreateExporter(string filePath)
+    {
+        string extension = Path.GetExtension(filePath).ToLower();
+
+        return extension switch
+        {
+            ".json" => new JsonAggregateExportVisitor(),
+            // ".csv" => new CsvDataImporter<T>(),
+            // ".yaml" => new YamlDataImporter<T>(),
+            // ".yml" => new YamlDataImporter<T>(),
             _ => throw new NotSupportedException($"Формат файла {extension} не поддерживается.")
         };
     }

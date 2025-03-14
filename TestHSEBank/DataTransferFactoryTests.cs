@@ -3,7 +3,7 @@ using HSEBank.BusinessLogic.Services.Abstractions;
 
 namespace TestHSEBank;
 
-public class DataImporterFactoryTests
+public class DataTransferFactoryTests
 {
     private class TestData
     {
@@ -18,7 +18,7 @@ public class DataImporterFactoryTests
     public void CreateImporter_ShouldReturn_CorrectDataImporter(string filePath, Type expectedType)
     {
         // Act
-        IDataImporter<TestData> importer = DataImporterFactory.CreateImporter<TestData>(filePath);
+        IDataImporter<TestData> importer = DataTransferFactory.CreateImporter<TestData>(filePath);
 
         // Assert
         Assert.NotNull(importer);
@@ -32,7 +32,7 @@ public class DataImporterFactoryTests
     public void CreateImporter_ShouldThrow_NotSupportedException_ForUnsupportedExtension(string filePath)
     {
         // Act & Assert
-        var exception = Assert.Throws<NotSupportedException>(() => DataImporterFactory.CreateImporter<TestData>(filePath));
+        var exception = Assert.Throws<NotSupportedException>(() => DataTransferFactory.CreateImporter<TestData>(filePath));
         string extension = Path.GetExtension(filePath).ToLower();
         Assert.Equal($"Формат файла {extension} не поддерживается.", exception.Message);
     }
