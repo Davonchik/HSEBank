@@ -45,12 +45,12 @@ public class FinancialFacade : IFinancialFacade
     {
         if (!_accountFacade.AccountExists(operationDto.BankAccountId))
         {
-            throw new ArgumentException($"Account does not exist {nameof(operationDto.BankAccountId)}");
+            throw new ArgumentException($"Нет такого аккаунта {nameof(operationDto.BankAccountId)}");
         }
         
         if (!_categoryFacade.CategoryExists(operationDto.CategoryId))
         {
-            throw new ArgumentException($"Category does not exist {nameof(operationDto.CategoryId)}");
+            throw new ArgumentException($"Нет такой категории {nameof(operationDto.CategoryId)}");
         }
         
         var category = GetCategory(operationDto.CategoryId);
@@ -64,7 +64,7 @@ public class FinancialFacade : IFinancialFacade
     {
         if (!_categoryFacade.CategoryExists(editOperationDto.CategoryId))
         {
-            throw new ArgumentException($"Category does not exist {nameof(editOperationDto.CategoryId)}");
+            throw new ArgumentException($"Такой категории нет {nameof(editOperationDto.CategoryId)}");
         }
         return _operationFacade.EditOperation(editOperationDto);
     }
@@ -123,7 +123,7 @@ public class FinancialFacade : IFinancialFacade
     {
         if (!_accountFacade.AccountExists(bankAccountId))
         {
-            throw new ArgumentException($"Account does not exist {nameof(bankAccountId)}");
+            throw new ArgumentException($"Нет такого аккаунта {nameof(bankAccountId)}");
         }
         decimal balance = 0;
         foreach (var op in _operationFacade.GetByCondition(o => o.BankAccountId == bankAccountId))

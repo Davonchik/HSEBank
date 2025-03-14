@@ -44,21 +44,29 @@ var serviceProvider = services.BuildServiceProvider();
 // Получаем фасад из DI
 var financialFacade = serviceProvider.GetRequiredService<IFinancialFacade>();
 
-financialFacade.ImportOperationsFromFile("import/test1_json.json");
+//financialFacade.ImportOperationsFromFile("import/test1_json.json");
 
 bool exitRequested = false;
 
 while (!exitRequested)
 {
     Console.WriteLine("\nВыберите действие:");
-    Console.WriteLine("1. Создать банковский счет");
+    Console.WriteLine("1. Создать банковский счёт");
     Console.WriteLine("2. Создать категорию");
     Console.WriteLine("3. Создать операцию");
     Console.WriteLine("4. Пересчитать баланс счёта");
     Console.WriteLine("5. Показать все операции");
     Console.WriteLine("6. Получить разницу доходов и расходов за период");
     Console.WriteLine("7. Группировка операций по категориям");
-    Console.WriteLine("8. Выход");
+    Console.WriteLine("8. Импорт/Экспорт данных");
+    Console.WriteLine("9. Выход");
+    // Console.WriteLine("9. Выход Редактировать счёт");
+    // Console.WriteLine("10. Удалить счёт");
+    // Console.WriteLine("11. Редактировать категорию");
+    // Console.WriteLine("12. Удалить категорию");
+    // Console.WriteLine("13. Редактировать операцию");
+    // Console.WriteLine("14. Удалить операцию");
+    // Console.WriteLine("15. Выход");
 
     try
     {
@@ -67,7 +75,12 @@ while (!exitRequested)
             case "1":
                 Console.Write("Введите название счёта: ");
                 var accountName = Console.ReadLine();
-
+                if (string.IsNullOrWhiteSpace(accountName))
+                {
+                    Console.WriteLine("Вы ввели пустое имя аккаунта!");
+                    break;
+                }
+                
                 var newAccount = financialFacade.CreateBankAccount(new BankAccountDto
                 {
                     Name = accountName,
@@ -87,11 +100,15 @@ while (!exitRequested)
                 }
                 
                 Console.Write("Введите тип (1 - если Income; 2 - если Expense): ");
-                if (!Enum.TryParse(Console.ReadLine(), out Type type))
+                var input = Console.ReadLine();
+                if (!int.TryParse(input, out int choice) || (choice != 1 && choice != 2))
                 {
-                    Console.WriteLine("Такого типа не существует!");
+                    Console.WriteLine("Некорректный выбор типа. Введите 1 для Income или 2 для Expense.");
                     break;
                 }
+
+                var type = (choice == 1) ? Type.Income : Type.Expense;
+
 
                 var newCategory = financialFacade.CreateCategory(new CategoryDto
                 {
@@ -136,7 +153,12 @@ while (!exitRequested)
 
             case "4":
                 Console.Write("Введите ID счёта для пересчёта: ");
-                var balanceAccountId = Guid.Parse(Console.ReadLine());
+                //var balanceAccountId = Guid.Parse(Console.ReadLine());
+                if (!Guid.TryParse(Console.ReadLine(), out Guid balanceAccountId))
+                {
+                    Console.WriteLine("Некорректный ID счёта!");
+                    break;
+                }
                 var recalculatedBalance = financialFacade.RecalculateBalance(balanceAccountId);
 
                 Console.WriteLine($"Пересчитанный баланс: {recalculatedBalance}");
@@ -154,14 +176,23 @@ while (!exitRequested)
                 {
                     Console.WriteLine($"Операция {op.Id}: {op.Amount}, {op.Type}, Дата: {op.Date}");
                 }
-
                 break;
 
             case "6":
-                Console.WriteLine("Введите начальную дату (yyyy-mm-dd): ");
-                var startDate = DateTime.Parse(Console.ReadLine());
-                Console.WriteLine("Введите конечную дату (yyyy-mm-dd):");
-                var endDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Введите начальную дату (yyyy-mm-dd hh:mm:ss): ");
+                //var startDate = DateTime.Parse(Console.ReadLine());
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
+                {
+                    Console.WriteLine("Некорректный формат даты!");
+                    break;
+                }
+                Console.WriteLine("Введите конечную дату (yyyy-mm-dd hh:mm:ss):");
+                //var endDate = DateTime.Parse(Console.ReadLine());
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+                {
+                    Console.WriteLine("Некорректный формат даты!");
+                    break;
+                }
 
                 var data = new FinancialDataDto
                 {
