@@ -132,23 +132,23 @@ public class FinancialFacade : IFinancialFacade
         }
         return balance;
     }
-
-    public void ImportAccountsFromJson(string filePath)
+    
+    public void ImportBankAccountsFromFile(string filePath)
     {
-        var jsonImporter = new JsonDataImporter<BankAccountDto>();
-        
-        var accountDtos = jsonImporter.Import(filePath);
+        var importer = DataTransferFactory.CreateImporter<BankAccountDto>(filePath);
 
-        foreach (var account in accountDtos)
+        var accountsDtos = importer.Import(filePath);
+
+        foreach (var account in accountsDtos)
         {
             CreateBankAccount(account);
         }
     }
 
-    public void ExportAccountsFromJson(string filePath)
+    public void ExportBankAccountsFromFile(string filePath)
     {
-        var exportVisitor = new JsonAggregateExportVisitor();
-
+        var exportVisitor = DataTransferFactory.CreateExporter(filePath);
+        
         var accounts = GetAllBankAccounts().ToList();
 
         foreach (var account in accounts)
@@ -158,32 +158,32 @@ public class FinancialFacade : IFinancialFacade
         
         exportVisitor.SaveToFile(filePath);
     }
-    
-    // public void ImportOperationsFromJson(string filePath)
-    // {
-    //     var jsonImporter = new JsonDataImporter<OperationDto>();
-    //     
-    //     var operationDtos = jsonImporter.Import(filePath);
-    //
-    //     foreach (var op in operationDtos)
-    //     {
-    //         CreateOperation(op);
-    //     }
-    // }
-    //
-    // public void ExportOperationsFromJson(string filePath)
-    // {
-    //     var exportVisitor = new JsonAggregateExportVisitor();
-    //
-    //     var operations = GetAllOperations().ToList();
-    //
-    //     foreach (var op in operations)
-    //     {
-    //         op.Accept(exportVisitor);
-    //     }
-    //     
-    //     exportVisitor.SaveToFile(filePath);
-    // }
+
+    public void ImportCategoriesFromFile(string filePath)
+    {
+        var importer = DataTransferFactory.CreateImporter<CategoryDto>(filePath);
+        
+        var categories = importer.Import(filePath);
+
+        foreach (var category in categories)
+        {
+            CreateCategory(category);
+        }
+    }
+
+    public void ExportCategoriesFromFile(string filePath)
+    {
+        var exportVisitor = DataTransferFactory.CreateExporter(filePath);
+        
+        var categories = GetAllCategories().ToList();
+
+        foreach (var category in categories)
+        {
+            category.Accept(exportVisitor);
+        }
+        
+        exportVisitor.SaveToFile(filePath);
+    }
     
     public void ImportOperationsFromFile(string filePath)
     {

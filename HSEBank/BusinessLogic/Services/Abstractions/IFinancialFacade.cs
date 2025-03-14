@@ -29,9 +29,13 @@ public interface IFinancialFacade
     IEnumerable<BankAccount> GetAllBankAccounts();
     IEnumerable<Category> GetAllCategories();
 
-    public void ImportAccountsFromJson(string filePath);
+    public void ImportBankAccountsFromFile(string filePath);
 
-    public void ExportAccountsFromJson(string filePath);
+    public void ExportBankAccountsFromFile(string filePath);
+
+    public void ImportCategoriesFromFile(string filePath);
+
+    public void ExportCategoriesFromFile(string filePath);
 
     public void ImportOperationsFromFile(string filePath);
 

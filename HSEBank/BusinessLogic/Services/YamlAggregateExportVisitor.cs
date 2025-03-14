@@ -4,7 +4,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace HSEBank.BusinessLogic.Services;
 
-public class YamlAggregateExportVisitor
+public class YamlAggregateExportVisitor : IDataExportVisitor
 {
     private readonly List<IVisitable> _objects = [];
     

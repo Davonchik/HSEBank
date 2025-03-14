@@ -1,4 +1,5 @@
 using HSEBank.BusinessLogic.Services.Abstractions;
+using HSEBank.BusinessLogic.Services.Facades;
 
 namespace HSEBank.BusinessLogic.Services;
 
@@ -25,9 +26,9 @@ public class DataTransferFactory
         return extension switch
         {
             ".json" => new JsonAggregateExportVisitor(),
-            // ".csv" => new CsvDataImporter<T>(),
-            // ".yaml" => new YamlDataImporter<T>(),
-            // ".yml" => new YamlDataImporter<T>(),
+            ".csv" => new CsvAggregateExportVisitor(),
+            ".yaml" => new YamlAggregateExportVisitor(),
+            ".yml" => new YamlAggregateExportVisitor(),
             _ => throw new NotSupportedException($"Формат файла {extension} не поддерживается.")
         };
     }

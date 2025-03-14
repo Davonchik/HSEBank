@@ -13,7 +13,7 @@ public class FinancialFactory : IFinancialFactory
     {
         if (operationDto.Amount < 0)
         {
-            throw new ArgumentException("Amount cannot be negative");
+            throw new ArgumentException("Стоимость не может быть отрицательной!");
         }
 
         return new Operation()
