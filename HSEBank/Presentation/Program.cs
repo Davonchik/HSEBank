@@ -46,6 +46,51 @@ var serviceProvider = services.BuildServiceProvider();
 var financialFacade = serviceProvider.GetRequiredService<IFinancialFacade>();
 
 //financialFacade.ImportOperationsFromFile("import/test1_json.json");
+static void ProcessImportExportMenu(IFinancialFacade facade)
+{
+    Console.WriteLine("\nВыберите действие импорта/экспорта:");
+    Console.WriteLine("1. Импорт операций");
+    Console.WriteLine("2. Экспорт операций");
+    Console.WriteLine("3. Импорт банковских счетов");
+    Console.WriteLine("4. Экспорт банковских счетов");
+    Console.WriteLine("5. Импорт категорий");
+    Console.WriteLine("6. Экспорт категорий");
+    Console.Write("Ваш выбор: ");
+    var ioChoice = Console.ReadLine();
+    Console.Write("Введите путь к файлу: ");
+    var filePath = Console.ReadLine();
+
+    switch (ioChoice)
+    {
+        case "1":
+            facade.ImportOperationsFromFile(filePath);
+            Console.WriteLine("Операции импортированы.");
+            break;
+        case "2":
+            facade.ExportOperationsFromFile(filePath);
+            Console.WriteLine("Операции экспортированы.");
+            break;
+        case "3":
+            facade.ImportBankAccountsFromFile(filePath);
+            Console.WriteLine("Банковские счета импортированы.");
+            break;
+        case "4":
+            facade.ExportBankAccountsFromFile(filePath);
+            Console.WriteLine("Банковские счета экспортированы.");
+            break;
+        case "5":
+            facade.ImportCategoriesFromFile(filePath);
+            Console.WriteLine("Категории импортированы.");
+            break;
+        case "6":
+            facade.ExportCategoriesFromFile(filePath);
+            Console.WriteLine("Категории экспортированы.");
+            break;
+        default:
+            Console.WriteLine("Неверный выбор в подменю.");
+            break;
+    }
+}
 
 bool exitRequested = false;
 
@@ -347,7 +392,7 @@ while (!exitRequested)
                 break;
             
             case "15":
-                
+                ProcessImportExportMenu(financialFacade);
                 break;
             
             case "16":
