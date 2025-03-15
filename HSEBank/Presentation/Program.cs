@@ -3,6 +3,7 @@ using HSEBank.BusinessLogic.Services;
 using HSEBank.BusinessLogic.Services.Abstractions;
 using HSEBank.BusinessLogic.Services.Facades;
 using HSEBank.BusinessLogic.Dto;
+using HSEBank.DataAccess.Models;
 using HSEBank.DataAccess.Repositories;
 using HSEBank.DataAccess.Repositories.Abstractions;
 using HSEBank.Presentation;
@@ -58,15 +59,15 @@ while (!exitRequested)
     Console.WriteLine("5. Показать все операции");
     Console.WriteLine("6. Получить разницу доходов и расходов за период");
     Console.WriteLine("7. Группировка операций по категориям");
-    Console.WriteLine("8. Импорт/Экспорт данных");
-    Console.WriteLine("9. Выход");
-    // Console.WriteLine("9. Выход Редактировать счёт");
-    // Console.WriteLine("10. Удалить счёт");
-    // Console.WriteLine("11. Редактировать категорию");
-    // Console.WriteLine("12. Удалить категорию");
-    // Console.WriteLine("13. Редактировать операцию");
-    // Console.WriteLine("14. Удалить операцию");
-    // Console.WriteLine("15. Выход");
+    Console.WriteLine("8. Редактировать счёт");
+    Console.WriteLine("9. Удалить счёт");
+    Console.WriteLine("10. Редактировать категорию");
+    Console.WriteLine("11. Удалить категорию");
+    Console.WriteLine("12. Редактировать операцию");
+    Console.WriteLine("13. Удалить операцию");
+    Console.WriteLine("14. Вывести все мои счета");
+    Console.WriteLine("15. Импорт/Экспорт данных");
+    Console.WriteLine("16. Выход");
 
     try
     {
@@ -224,13 +225,132 @@ while (!exitRequested)
                 }
 
                 break;
-            
+
             case "8":
+                Console.Write("Введите ID счёта для редактирования: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid newAccountId))
+                {
+                    Console.WriteLine("Некорректный ID счёта!");
+                    break;
+                }
                 
-                
+                Console.Write("Введите новое название для счёта: ");
+                var newAccountName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(newAccountName))
+                {
+                    Console.WriteLine("Вы ввели пустое имя аккаунта!");
+                    break;
+                }
+
+                var editBankAccountDto = new EditBankAccountDto
+                {
+                    BankAccountId = newAccountId,
+                    Name = newAccountName,
+                };
+
+                financialFacade.EditBankAccount(editBankAccountDto);
                 break;
 
             case "9":
+                Console.Write("Введите ID счёта для удаления: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid deleteAccountId))
+                {
+                    Console.WriteLine("Некорректный ID счёта!");
+                    break;
+                }
+                
+                financialFacade.DeleteBankAccount(deleteAccountId);
+                break;
+                
+            case "10":
+                Console.Write("Введите ID категории для редактирования: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid newCategoryId))
+                {
+                    Console.WriteLine("Некорректный ID категории!");
+                    break;
+                }
+                
+                Console.Write("Введите новое название для категории: ");
+                var newCategoryName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(newCategoryName))
+                {
+                    Console.WriteLine("Вы ввели пустое имя категории!");
+                    break;
+                }
+
+                var editCategoryDto = new EditCategoryDto
+                {
+                    CategoryId = newCategoryId,
+                    Name = newCategoryName,
+                };
+
+                financialFacade.EditCategory(editCategoryDto);
+                break;
+            
+            case "11":
+                Console.Write("Введите ID категории для удаления: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid deleteCategoryId))
+                {
+                    Console.WriteLine("Некорректный ID категории!");
+                    break;
+                }
+
+                financialFacade.DeleteCategory(deleteCategoryId);
+                break;
+            
+            case "12":
+                Console.Write("Введите ID операции, в которой хотите поменять категорию: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid newOperationId))
+                {
+                    Console.WriteLine("Некорректный ID операции!");
+                    break;
+                }
+                
+                Console.Write("Введите ID категории: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid newOpCategoryId))
+                {
+                    Console.WriteLine("Некорректный ID категории!");
+                    break;
+                }
+
+                var editOperationDto = new EditOperationDto
+                {
+                    OperationId = newOperationId,
+                    CategoryId = newOpCategoryId,
+                };
+                
+                financialFacade.EditOperation(editOperationDto);
+                break;
+            
+            case "13":
+                Console.Write("Введите ID операции для удаления: ");
+                if (!Guid.TryParse(Console.ReadLine(), out Guid deleteOperationId))
+                {
+                    Console.WriteLine("Некорректный ID операции!");
+                    break;
+                }
+
+                financialFacade.DeleteOperation(deleteOperationId);
+                break;
+            
+            case "14":
+                var allBankAccounts = financialFacade.GetAllBankAccounts().ToList();
+                if (!allBankAccounts.Any())
+                {
+                    Console.WriteLine("Ещё нет ни одного счёта!");
+                    break;
+                }
+                foreach (var ba in allBankAccounts)
+                {
+                    Console.WriteLine($"Bank Account: {ba.Id}, Name: {ba.Name}, Balance: {ba.Balance}");
+                }
+                break;
+            
+            case "15":
+                
+                break;
+            
+            case "16":
                 exitRequested = true;
                 break;
 

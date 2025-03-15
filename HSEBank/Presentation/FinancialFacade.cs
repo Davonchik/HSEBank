@@ -91,7 +91,21 @@ public class FinancialFacade : IFinancialFacade
 
     public bool DeleteBankAccount(Guid bankAccountId)
     {
-        return _accountFacade.DeleteBankAccount(bankAccountId);
+        var del = _accountFacade.DeleteBankAccount(bankAccountId);
+
+        if (del)
+        {
+            var operations = _operationFacade.GetAllOperations();
+            foreach (var op in operations)
+            {
+                if (op.BankAccountId == bankAccountId)
+                {
+                    _operationFacade.DeleteOperation(op.Id);
+                }
+            }
+        }
+        
+        return del;
     }
 
     public BankAccount GetBankAccount(Guid bankAccountId)
@@ -111,7 +125,21 @@ public class FinancialFacade : IFinancialFacade
 
     public bool DeleteCategory(Guid categoryId)
     {
-        return _categoryFacade.DeleteCategory(categoryId);
+        var del = _categoryFacade.DeleteCategory(categoryId);
+
+        if (del)
+        {
+            var operations = _operationFacade.GetAllOperations();
+            foreach (var op in operations)
+            {
+                if (op.CategoryId == categoryId)
+                {
+                    _operationFacade.DeleteOperation(op.Id);
+                }
+            }
+        }
+        
+        return del;
     }
 
     public Category GetCategory(Guid categoryId)
@@ -130,6 +158,9 @@ public class FinancialFacade : IFinancialFacade
         {
             balance += (op.Type == Type.Income ? op.Amount : -op.Amount);
         }
+
+        _accountFacade.GetById(bankAccountId).Balance = balance;
+        
         return balance;
     }
     

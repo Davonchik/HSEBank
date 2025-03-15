@@ -28,7 +28,7 @@ public class OperationFacade : IOperationFacade
     {
         if (!OperationExists(id))
         {
-            throw new ArgumentException($"Operation with id {id} does not exist");
+            throw new ArgumentException($"Операции с таким ID'{id}' не существует!t");
         }
         return _operationRepository.GetById(id);
     }
@@ -37,7 +37,7 @@ public class OperationFacade : IOperationFacade
     {
         if (!OperationExists(editOperationDto.OperationId))
         {
-            throw new ArgumentException($"Operation with id {editOperationDto.OperationId} does not exist");
+            throw new ArgumentException($"Операции с таким ID'{editOperationDto.OperationId}' не существует!");
         }
         return _operationRepository.Update(editOperationDto);
     }
@@ -46,7 +46,7 @@ public class OperationFacade : IOperationFacade
     {
         if (!OperationExists(id))
         {
-            throw new ArgumentException($"Operation with id {id} does not exist");
+            throw new ArgumentException($"Операции с ID'{id}' не существует!");
         }
         return _operationRepository.Delete(id);
     }

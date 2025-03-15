@@ -28,7 +28,7 @@ public class AccountFacade : IAccountFacade
     {
         if (!AccountExists(id))
         {
-            throw new ArgumentException($"Account with id {id} does not exist");
+            throw new ArgumentException($"Аккаунта с таким ID'{id}' не существует!");
         }
         return _accountRepository.GetById(id);
     }
@@ -37,7 +37,7 @@ public class AccountFacade : IAccountFacade
     {
         if (!AccountExists(accountDto.BankAccountId))
         {
-            throw new ArgumentException($"Account with id {accountDto.BankAccountId} does not exist");
+            throw new ArgumentException($"Аккаунта с таким ID'{accountDto.BankAccountId}' не существует!");
         }
         return _accountRepository.Update(accountDto);
     }
@@ -46,7 +46,7 @@ public class AccountFacade : IAccountFacade
     {
         if (!AccountExists(bankAccountId))
         {
-            throw new ArgumentException($"Account with id {bankAccountId} does not exist");
+            throw new ArgumentException($"Аккаунта с таким ID'{bankAccountId}' не существует!");
         }
         return _accountRepository.Delete(bankAccountId);
     }

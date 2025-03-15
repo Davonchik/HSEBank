@@ -32,7 +32,7 @@ public class CategoryFacade : ICategoryFacade
     {
         if (!CategoryExists(id))
         {
-            throw new ArgumentException($"Category with id {id} does not exist");
+            throw new ArgumentException($"Категории с таким ID'{id}' не существует!");
         }
         return _categoryRepository.GetById(id);
     }
@@ -41,7 +41,7 @@ public class CategoryFacade : ICategoryFacade
     {
         if (!CategoryExists(dto.CategoryId))
         {
-            throw new ArgumentException($"Category with id {dto.CategoryId} does not exist");
+            throw new ArgumentException($"Категории с таким ID'{dto.CategoryId}' не существует!");
         }
         return _categoryRepository.Update(dto);
     }
@@ -50,7 +50,7 @@ public class CategoryFacade : ICategoryFacade
     {
         if (!CategoryExists(id))
         {
-            throw new ArgumentException($"Category with id {id} does not exist");
+            throw new ArgumentException($"Категории с таким ID'{id}' не существует!");
         }
         return _categoryRepository.Delete(id);
     }
@@ -64,7 +64,7 @@ public class CategoryFacade : ICategoryFacade
     {
         if (!_categoryRepository.GetByCondition(predicate).Any())
         {
-            throw new ArgumentException($"No operations found for condition {predicate}");
+            throw new ArgumentException($"Нет подходящих по {predicate} операций!");
         }
         return _categoryRepository.GetByCondition(predicate);
     }
