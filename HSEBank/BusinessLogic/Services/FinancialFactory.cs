@@ -48,11 +48,11 @@ public class FinancialFactory : IFinancialFactory
 
         if (categoryDto.CategoryId.HasValue)
         {
-            category.Id = categoryDto.CategoryId.Value;
+            category.CategoryId = categoryDto.CategoryId.Value;
             return category;
         }
         
-        category.Id = Guid.NewGuid();
+        category.CategoryId = Guid.NewGuid();
         return category;
     }
 }

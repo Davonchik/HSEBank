@@ -15,7 +15,8 @@ public class JsonDataImporter<T> : IDataImporter<T>
         string data = File.ReadAllText(filePath);
         return JsonSerializer.Deserialize<List<T>>(data, new JsonSerializerOptions
         {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            PropertyNameCaseInsensitive = true
         })?? new List<T>();
     }
 }

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using CsvHelper;
 using HSEBank.BusinessLogic.Services.Abstractions;
 
@@ -14,7 +15,22 @@ public class CsvDataImporter<T> : IDataImporter<T>
     {
         using var reader = new StreamReader(filePath);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        var records = csv.GetRecords<T>().ToList();
-        return records;
+        var data = csv.Read();
+        csv.ReadHeader();
+        List<T> results = [];
+        while (csv.Read())
+        {
+            var jsonData = csv.GetField("Data");
+            if (jsonData == null)
+            {
+                throw new InvalidDataException("В файле csv отсутствует поле Data!");
+            }
+            var obj = JsonSerializer.Deserialize<T>(jsonData);
+
+            if (obj != null)
+                results.Add(obj);
+        }
+
+        return results;
     }
 }

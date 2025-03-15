@@ -21,7 +21,7 @@ public class CategoryFacade : ICategoryFacade
     {
         if (_categoryRepository.GetAll().Any(x => x.Name == categoryDto.Name && x.Type == categoryDto.Type))
         {
-            throw new ArgumentException($"Category with name {categoryDto.Name} and type {categoryDto.Type} already exists");
+            throw new ArgumentException($"Категория с именем {categoryDto.Name} и типом {categoryDto.Type} уже существует");
         }
         var newCategory = _financialFactory.CreateCategory(categoryDto);
         _categoryRepository.Create(newCategory);

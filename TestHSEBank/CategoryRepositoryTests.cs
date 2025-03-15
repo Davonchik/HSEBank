@@ -27,7 +27,7 @@ public class CategoryRepositoryTests
 
         // Assert
         Assert.Equal(category, createdCategory);
-        Assert.True(_repository.Exists(category.Id));
+        Assert.True(_repository.Exists(category.CategoryId));
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class CategoryRepositoryTests
         _repository.Create(category);
 
         // Act
-        var retrievedCategory = _repository.GetById(category.Id);
+        var retrievedCategory = _repository.GetById(category.CategoryId);
 
         // Assert
         Assert.Equal(category, retrievedCategory);
@@ -64,7 +64,7 @@ public class CategoryRepositoryTests
         var newName = "Updated Category Name";
 
         var editDto = _fixture.Build<EditCategoryDto>()
-            .With(dto => dto.CategoryId, category.Id)
+            .With(dto => dto.CategoryId, category.CategoryId)
             .With(dto => dto.Name, newName)
             .Create();
 
@@ -73,7 +73,7 @@ public class CategoryRepositoryTests
 
         // Assert
         Assert.True(result);
-        var updatedCategory = _repository.GetById(category.Id);
+        var updatedCategory = _repository.GetById(category.CategoryId);
         Assert.Equal(newName, updatedCategory.Name);
     }
 
@@ -98,11 +98,11 @@ public class CategoryRepositoryTests
         _repository.Create(category);
 
         // Act
-        var result = _repository.Delete(category.Id);
+        var result = _repository.Delete(category.CategoryId);
 
         // Assert
         Assert.True(result);
-        Assert.False(_repository.Exists(category.Id));
+        Assert.False(_repository.Exists(category.CategoryId));
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class CategoryRepositoryTests
         _repository.Create(category);
 
         // Act & Assert
-        Assert.True(_repository.Exists(category.Id));
+        Assert.True(_repository.Exists(category.CategoryId));
         Assert.False(_repository.Exists(Guid.NewGuid()));
     }
 }

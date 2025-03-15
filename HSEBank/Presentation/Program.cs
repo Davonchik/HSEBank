@@ -45,9 +45,40 @@ var serviceProvider = services.BuildServiceProvider();
 // Получаем фасад из DI
 var financialFacade = serviceProvider.GetRequiredService<IFinancialFacade>();
 
+static bool CheckImportPath(string importFileName, out string importFilePath)
+{
+    importFilePath = Path.Combine(Environment.CurrentDirectory, "import", importFileName);
+    if (!File.Exists(importFilePath))
+    {
+        Console.WriteLine("Такого файла в папке import не существует!");
+        return false;
+    }
+    return true;
+}
+
+static bool CheckExportDirectory(string exportFileName, out string exportFilePath)
+{
+    exportFilePath = Path.Combine(Environment.CurrentDirectory, "export");
+    if (!Directory.Exists(exportFilePath))
+    {
+        Console.WriteLine("Папки export не существует!");
+        return false;
+    }
+    exportFilePath = Path.Combine(exportFilePath, exportFileName);
+    return true;
+}
+
 //financialFacade.ImportOperationsFromFile("import/test1_json.json");
 static void ProcessImportExportMenu(IFinancialFacade facade)
 {
+    Console.Write("Введите имя файла: ");
+    string fileName = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(fileName))
+    {
+        Console.WriteLine("Вы ввели пустое имя файла!");
+        return;
+    } 
+    
     Console.WriteLine("\nВыберите действие импорта/экспорта:");
     Console.WriteLine("1. Импорт операций");
     Console.WriteLine("2. Экспорт операций");
@@ -57,32 +88,37 @@ static void ProcessImportExportMenu(IFinancialFacade facade)
     Console.WriteLine("6. Экспорт категорий");
     Console.Write("Ваш выбор: ");
     var ioChoice = Console.ReadLine();
-    Console.Write("Введите путь к файлу: ");
-    var filePath = Console.ReadLine();
 
+    string filePath = String.Empty;
     switch (ioChoice)
     {
         case "1":
+            if (!CheckImportPath(fileName, out filePath)) break;
             facade.ImportOperationsFromFile(filePath);
             Console.WriteLine("Операции импортированы.");
             break;
         case "2":
+            if (!CheckExportDirectory(fileName, out filePath)) break;
             facade.ExportOperationsFromFile(filePath);
             Console.WriteLine("Операции экспортированы.");
             break;
         case "3":
+            if (!CheckImportPath(fileName, out filePath)) break;
             facade.ImportBankAccountsFromFile(filePath);
             Console.WriteLine("Банковские счета импортированы.");
             break;
         case "4":
+            if (!CheckExportDirectory(fileName, out filePath)) break;
             facade.ExportBankAccountsFromFile(filePath);
             Console.WriteLine("Банковские счета экспортированы.");
             break;
         case "5":
+            if (!CheckImportPath(fileName, out filePath)) break;
             facade.ImportCategoriesFromFile(filePath);
             Console.WriteLine("Категории импортированы.");
             break;
         case "6":
+            if (!CheckExportDirectory(fileName, out filePath)) break;
             facade.ExportCategoriesFromFile(filePath);
             Console.WriteLine("Категории экспортированы.");
             break;
@@ -102,17 +138,18 @@ while (!exitRequested)
     Console.WriteLine("3. Создать операцию");
     Console.WriteLine("4. Пересчитать баланс счёта");
     Console.WriteLine("5. Показать все операции");
-    Console.WriteLine("6. Получить разницу доходов и расходов за период");
-    Console.WriteLine("7. Группировка операций по категориям");
-    Console.WriteLine("8. Редактировать счёт");
-    Console.WriteLine("9. Удалить счёт");
-    Console.WriteLine("10. Редактировать категорию");
-    Console.WriteLine("11. Удалить категорию");
-    Console.WriteLine("12. Редактировать операцию");
-    Console.WriteLine("13. Удалить операцию");
-    Console.WriteLine("14. Вывести все мои счета");
-    Console.WriteLine("15. Импорт/Экспорт данных");
-    Console.WriteLine("16. Выход");
+    Console.WriteLine("6. Показать все категории");
+    Console.WriteLine("7. Показать все счета");
+    Console.WriteLine("8. Получить разницу доходов и расходов за период");
+    Console.WriteLine("9. Группировка операций по категориям");
+    Console.WriteLine("10. Редактировать счёт");
+    Console.WriteLine("11. Удалить счёт");
+    Console.WriteLine("12. Редактировать категорию");
+    Console.WriteLine("13. Удалить категорию");
+    Console.WriteLine("14. Редактировать операцию");
+    Console.WriteLine("15. Удалить операцию");
+    Console.WriteLine("16. Импорт/Экспорт данных");
+    Console.WriteLine("17. Выход");
 
     try
     {
@@ -162,7 +199,7 @@ while (!exitRequested)
                     Type = type
                 });
 
-                Console.WriteLine($"Создана категория: {newCategory.Id}, {newCategory.Name}");
+                Console.WriteLine($"Создана категория: {newCategory.CategoryId}, {newCategory.Name}");
                 break;
 
             case "3":
@@ -211,10 +248,10 @@ while (!exitRequested)
                 break;
 
             case "5":
-                var operations = financialFacade.GetAllOperations();
+                var operations = financialFacade.GetAllOperations().ToList();
                 if (!operations.Any())
                 {
-                    Console.WriteLine("По данному счету операций не существует!");
+                    Console.WriteLine("Пока операций не существует!");
                     break;
                 }
 
@@ -223,8 +260,35 @@ while (!exitRequested)
                     Console.WriteLine($"Операция {op.Id}: {op.Amount}, {op.Type}, Дата: {op.Date}");
                 }
                 break;
-
+            
             case "6":
+                var categories = financialFacade.GetAllCategories().ToList();
+                if (!categories.Any())
+                {
+                    Console.WriteLine("Пока категорий не существует!");
+                    break;
+                }
+
+                foreach (var category in categories)
+                {
+                    Console.WriteLine($"Категория {category.CategoryId} --- {category.Name}, тип: {category.Type}");
+                }
+                break;
+            
+            case "7":
+                var allBankAccounts = financialFacade.GetAllBankAccounts().ToList();
+                if (!allBankAccounts.Any())
+                {
+                    Console.WriteLine("Ещё нет ни одного счёта!");
+                    break;
+                }
+                foreach (var ba in allBankAccounts)
+                {
+                    Console.WriteLine($"Bank Account: {ba.Id}, Name: {ba.Name}, Balance: {ba.Balance}");
+                }
+                break;
+
+            case "8":
                 Console.WriteLine("Введите начальную дату (yyyy-mm-dd hh:mm:ss): ");
                 //var startDate = DateTime.Parse(Console.ReadLine());
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
@@ -250,7 +314,7 @@ while (!exitRequested)
                 Console.WriteLine($"Разница доходов и расходов: {balanceDifference}");
                 break;
 
-            case "7":
+            case "9":
                 var financialData = new FinancialDataDto
                 {
                     Operations = financialFacade.GetAllOperations().ToList()
@@ -271,7 +335,7 @@ while (!exitRequested)
 
                 break;
 
-            case "8":
+            case "10":
                 Console.Write("Введите ID счёта для редактирования: ");
                 if (!Guid.TryParse(Console.ReadLine(), out Guid newAccountId))
                 {
@@ -296,7 +360,7 @@ while (!exitRequested)
                 financialFacade.EditBankAccount(editBankAccountDto);
                 break;
 
-            case "9":
+            case "11":
                 Console.Write("Введите ID счёта для удаления: ");
                 if (!Guid.TryParse(Console.ReadLine(), out Guid deleteAccountId))
                 {
@@ -307,7 +371,7 @@ while (!exitRequested)
                 financialFacade.DeleteBankAccount(deleteAccountId);
                 break;
                 
-            case "10":
+            case "12":
                 Console.Write("Введите ID категории для редактирования: ");
                 if (!Guid.TryParse(Console.ReadLine(), out Guid newCategoryId))
                 {
@@ -332,7 +396,7 @@ while (!exitRequested)
                 financialFacade.EditCategory(editCategoryDto);
                 break;
             
-            case "11":
+            case "13":
                 Console.Write("Введите ID категории для удаления: ");
                 if (!Guid.TryParse(Console.ReadLine(), out Guid deleteCategoryId))
                 {
@@ -343,7 +407,7 @@ while (!exitRequested)
                 financialFacade.DeleteCategory(deleteCategoryId);
                 break;
             
-            case "12":
+            case "14":
                 Console.Write("Введите ID операции, в которой хотите поменять категорию: ");
                 if (!Guid.TryParse(Console.ReadLine(), out Guid newOperationId))
                 {
@@ -367,7 +431,7 @@ while (!exitRequested)
                 financialFacade.EditOperation(editOperationDto);
                 break;
             
-            case "13":
+            case "15":
                 Console.Write("Введите ID операции для удаления: ");
                 if (!Guid.TryParse(Console.ReadLine(), out Guid deleteOperationId))
                 {
@@ -378,24 +442,11 @@ while (!exitRequested)
                 financialFacade.DeleteOperation(deleteOperationId);
                 break;
             
-            case "14":
-                var allBankAccounts = financialFacade.GetAllBankAccounts().ToList();
-                if (!allBankAccounts.Any())
-                {
-                    Console.WriteLine("Ещё нет ни одного счёта!");
-                    break;
-                }
-                foreach (var ba in allBankAccounts)
-                {
-                    Console.WriteLine($"Bank Account: {ba.Id}, Name: {ba.Name}, Balance: {ba.Balance}");
-                }
-                break;
-            
-            case "15":
+            case "16":
                 ProcessImportExportMenu(financialFacade);
                 break;
             
-            case "16":
+            case "17":
                 exitRequested = true;
                 break;
 

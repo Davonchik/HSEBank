@@ -73,7 +73,7 @@ public class FinancialFactoryTests
         var result = _factory.CreateCategory(categoryDto);
 
         // Assert
-        Assert.NotEqual(Guid.Empty, result.Id);
+        Assert.NotEqual(Guid.Empty, result.CategoryId);
         Assert.Equal(categoryDto.Name, result.Name);
         Assert.Equal(categoryDto.Type, result.Type);
     }

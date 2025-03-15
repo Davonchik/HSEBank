@@ -24,7 +24,7 @@ public class CsvAggregateExportVisitor : IDataExportVisitor
         foreach (var obj in _objects)
         {
             csv.WriteField(obj.GetType().Name);
-            string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = false });
+            string json = JsonSerializer.Serialize((object)obj, new JsonSerializerOptions { WriteIndented = false });
             csv.WriteField(json);
             csv.NextRecord();
         }

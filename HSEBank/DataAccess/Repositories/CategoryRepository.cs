@@ -14,7 +14,7 @@ public class CategoryRepository : ICategoryRepository
     
     public Category Create(Category category)
     {
-        _categories[category.Id] = category;
+        _categories[category.CategoryId] = category;
         return category;
     }
 

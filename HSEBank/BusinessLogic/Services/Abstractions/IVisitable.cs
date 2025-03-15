@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using HSEBank.DataAccess.Models;
+
 namespace HSEBank.BusinessLogic.Services.Abstractions;
 
 /// <summary>
