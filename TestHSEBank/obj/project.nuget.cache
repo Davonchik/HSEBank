@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "x0/f9X9AOIs=",
+  "dgSpecHash": "rkObG2dU/cE=",
   "success": true,
   "projectFilePath": "/Users/david/Desktop/ВШЭ/C#/HSEBank/TestHSEBank/TestHSEBank.csproj",
   "expectedPackageFiles": [
@@ -102,7 +102,7 @@
     "/Users/david/.nuget/packages/xunit.extensibility.core/2.4.2/xunit.extensibility.core.2.4.2.nupkg.sha512",
     "/Users/david/.nuget/packages/xunit.extensibility.execution/2.4.2/xunit.extensibility.execution.2.4.2.nupkg.sha512",
     "/Users/david/.nuget/packages/xunit.runner.visualstudio/2.4.5/xunit.runner.visualstudio.2.4.5.nupkg.sha512",
-    "/Users/david/.nuget/packages/yamldotnet/16.3.0/yamldotnet.16.3.0.nupkg.sha512"
+    "/Users/david/.nuget/packages/yamldotnet/12.0.0/yamldotnet.12.0.0.nupkg.sha512"
   ],
   "logs": []
 }

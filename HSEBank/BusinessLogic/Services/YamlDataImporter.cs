@@ -11,6 +11,7 @@ public class YamlDataImporter<T> : IDataImporter<T>
         var yaml = File.ReadAllText(filePath);
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .IgnoreUnmatchedProperties()
             .Build();
         var data = deserializer.Deserialize<List<T>>(yaml);
         return data ?? [];
