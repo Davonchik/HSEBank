@@ -31,7 +31,6 @@ public class FinancialFacadeTests
 
     public FinancialFacadeTests()
     {
-        // Сброс синглтона для независимости тестов
         typeof(FinancialFacade)
             .GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic)
             ?.SetValue(null, null);
@@ -51,21 +50,19 @@ public class FinancialFacadeTests
     [Fact]
     public void ImportBankAccountsFromFile_CallsCreateBankAccount_ForEachDTO()
     {
-        // Arrange: создаём список DTO для банковских счетов и сериализуем его в JSON.
+        // Arrange
         var bankAccountDto = _fixture.Create<BankAccountDto>();
         var dtos = new List<BankAccountDto> { bankAccountDto };
         string json = System.Text.Json.JsonSerializer.Serialize(dtos);
         string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".json");
         File.WriteAllText(tempFile, json);
     
-        // Настраиваем мок для создания банковского счёта.
-        // Важно, чтобы он возвращал не null.
+        
         var account = _fixture.Create<BankAccount>();
         account.Id = Guid.NewGuid(); // гарантируем, что Id задан.
         _accountFacadeMock.Setup(a => a.Create(It.IsAny<BankAccountDto>())).Returns(account);
         _accountFacadeMock.Setup(a => a.AccountExists(account.Id)).Returns(true);
-    
-        // Настраиваем начальную категорию. Предположим, что она уже существует.
+        
         Guid initGuid = Guid.Parse(HSEBank.DataAccess.Common.Constants.Constants.InitCategoryId);
         _categoryFacadeMock.Setup(c => c.CategoryExists(initGuid)).Returns(true);
         var existingCategory = _fixture.Create<Category>();
@@ -73,14 +70,13 @@ public class FinancialFacadeTests
         _categoryFacadeMock.Setup(c => c.GetById(initGuid)).Returns(existingCategory);
         _categoryFacadeMock.Setup(c => c.CategoryExists(existingCategory.CategoryId)).Returns(true);
     
-        // Настраиваем мок для создания операции.
         var initOperation = _fixture.Create<Operation>();
         _operationFacadeMock.Setup(o => o.Create(It.IsAny<OperationDto>())).Returns(initOperation);
     
-        // Act: вызываем метод импорта.
+        // Act
         _facade.ImportBankAccountsFromFile(tempFile);
     
-        // Assert: проверяем, что метод Create был вызван хотя бы один раз.
+        // Assert
         _accountFacadeMock.Verify(a => a.Create(It.IsAny<BankAccountDto>()), Times.AtLeastOnce);
     
         File.Delete(tempFile);
@@ -89,7 +85,7 @@ public class FinancialFacadeTests
     [Fact]
     public void ExportBankAccountsFromFile_WritesFile_WithData()
     {
-        // Arrange: используем тестовые аккаунты, которые наследуются от BankAccount и реализуют Accept
+        // Arrange
         var accounts = new List<BankAccount>
         {
             new TestBankAccount { Id = Guid.NewGuid(), Name = "Acc1", Balance = 100 },
@@ -126,7 +122,7 @@ public class FinancialFacadeTests
         // Act
         _facade.ImportCategoriesFromFile(tempFile);
 
-        // Assert: проверяем, что CreateCategory был вызван
+        // Assert
         _categoryFacadeMock.Verify(c => c.Create(It.IsAny<CategoryDto>()), Times.AtLeastOnce);
 
         File.Delete(tempFile);
@@ -155,35 +151,28 @@ public class FinancialFacadeTests
     [Fact]
     public void ImportOperationsFromFile_CallsCreateOperation_ForEachDTO()
     {
-        // Arrange: создаём список DTO для операций
+        // Arrange
         var operationDto = _fixture.Create<OperationDto>();
-        // Обеспечиваем, что сумма положительна, чтобы не было исключения в CreateOperation.
         operationDto.Amount = Math.Abs(operationDto.Amount);
     
-        // Настраиваем моки:
-        // Аккаунт должен существовать:
         _accountFacadeMock.Setup(a => a.AccountExists(operationDto.BankAccountId)).Returns(true);
-        // Категория должна существовать:
         _categoryFacadeMock.Setup(c => c.CategoryExists(operationDto.CategoryId)).Returns(true);
-        // Настраиваем GetById для категории, чтобы вернуть категорию с тем же CategoryId:
         var category = _fixture.Create<Category>();
         category.CategoryId = operationDto.CategoryId;
         _categoryFacadeMock.Setup(c => c.GetById(operationDto.CategoryId)).Returns(category);
     
-        // Настраиваем мок для создания операции:
         var createdOperation = _fixture.Create<Operation>();
         _operationFacadeMock.Setup(o => o.Create(operationDto)).Returns(createdOperation);
-    
-        // Сериализуем список операций в JSON:
+        
         var dtos = new List<OperationDto> { operationDto };
         string json = System.Text.Json.JsonSerializer.Serialize(dtos);
         string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".json");
         File.WriteAllText(tempFile, json);
 
-        // Act: вызываем импорт операций
+        // Act
         _facade.ImportOperationsFromFile(tempFile);
 
-        // Assert: проверяем, что метод Create операции был вызван хотя бы один раз.
+        // Assert
         _operationFacadeMock.Verify(o => o.Create(It.IsAny<OperationDto>()), Times.AtLeastOnce);
 
         File.Delete(tempFile);
@@ -217,7 +206,7 @@ public class FinancialFacadeTests
         var operationDto = _fixture.Create<OperationDto>();
         _accountFacadeMock.Setup(a => a.AccountExists(operationDto.BankAccountId)).Returns(false);
 
-        // Act & Assert: проверяем, что выбрасывается исключение с ожидаемым сообщением.
+        // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _facade.CreateOperation(operationDto));
         Assert.Equal("Нет такого аккаунта BankAccountId", ex.Message);
     }
@@ -304,10 +293,8 @@ public class FinancialFacadeTests
         _accountFacadeMock.Setup(a => a.AccountExists(account.Id)).Returns(true);
     
         Guid initGuid = Guid.Parse(Constants.InitCategoryId);
-        // Симулируем, что начальная категория существует
         _categoryFacadeMock.Setup(c => c.CategoryExists(initGuid)).Returns(true);
         var existingCategory = _fixture.Create<Category>();
-        // Обязательно задаём идентификатор равным initGuid:
         existingCategory.CategoryId = initGuid;
         _categoryFacadeMock.Setup(c => c.GetById(initGuid)).Returns(existingCategory);
         _categoryFacadeMock.Setup(c => c.CategoryExists(existingCategory.CategoryId)).Returns(true);
@@ -319,7 +306,7 @@ public class FinancialFacadeTests
 
         Assert.Equal(account, result);
         _accountFacadeMock.Verify(a => a.Create(bankAccountDto), Times.Once);
-        // Ожидаем, что GetById будет вызван дважды, так как метод GetCategory вызывается дважды
+        
         _categoryFacadeMock.Verify(c => c.GetById(initGuid), Times.Exactly(2));
         _operationFacadeMock.Verify(o => o.Create(It.Is<OperationDto>(dto =>
             dto.BankAccountId == account.Id &&
@@ -339,7 +326,7 @@ public class FinancialFacadeTests
         _accountFacadeMock.Setup(a => a.AccountExists(account.Id)).Returns(true);
     
         Guid initGuid = Guid.Parse(Constants.InitCategoryId);
-        // Симулируем, что начальная категория отсутствует
+        
         _categoryFacadeMock.Setup(c => c.CategoryExists(initGuid)).Returns(false);
         var newCategory = _fixture.Create<Category>();
         _categoryFacadeMock.Setup(c => c.Create(It.Is<CategoryDto>(dto =>
@@ -347,7 +334,7 @@ public class FinancialFacadeTests
                 dto.CategoryId == initGuid &&
                 dto.Type == Type.Income)))
             .Returns(newCategory);
-        // Настраиваем, чтобы после создания новой категории метод GetById возвращал эту категорию
+        
         _categoryFacadeMock.Setup(c => c.GetById(newCategory.CategoryId)).Returns(newCategory);
         _categoryFacadeMock.Setup(c => c.CategoryExists(newCategory.CategoryId)).Returns(true);
     

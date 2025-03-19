@@ -33,7 +33,6 @@ public class AnalyticsServiceLoggerProxyTests
             .Setup(s => s.GetBalanceDifference(data, start, end))
             .Returns(expectedResult);
 
-        // Перехватываем вывод в консоль
         using var writer = new StringWriter();
         var originalOut = Console.Out;
         Console.SetOut(writer);
@@ -41,16 +40,13 @@ public class AnalyticsServiceLoggerProxyTests
         // Act
         var result = _proxy.GetBalanceDifference(data, start, end);
 
-        // Восстанавливаем консоль
         Console.SetOut(originalOut);
 
         // Assert
         Assert.Equal(expectedResult, result);
 
-        // Проверяем, что метод был делегирован
         _serviceMock.Verify(s => s.GetBalanceDifference(data, start, end), Times.Once);
 
-        // Проверяем, что логирование действительно было
         var output = writer.GetStringBuilder().ToString();
         Assert.Contains("Запущен метод GetBalanceDifference", output);
         Assert.Contains("Метод GetBalanceDifference завершен за", output);

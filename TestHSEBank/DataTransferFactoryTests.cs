@@ -6,7 +6,6 @@ namespace TestHSEBank;
 
 public class DataTransferFactoryTests
 {
-    // Фиктивный класс для тестирования импортеров
     private class TestData
     {
         public int Value { get; set; }

@@ -41,16 +41,16 @@ public class YamlDataImporterTests
     [Fact]
     public void Import_ShouldReturnEmptyList_WhenYamlIsEmpty()
     {
-        // Arrange: создаём пустой файл.
+        // Arrange
         var tempFile = Path.GetTempFileName();
         File.WriteAllText(tempFile, string.Empty);
 
         var importer = new YamlDataImporter<TestData>();
 
-        // Act: импортируем данные из пустого файла.
+        // Act
         var result = importer.Import(tempFile);
 
-        // Assert: результат не null, но пустой список.
+        // Assert
         Assert.NotNull(result);
         Assert.Empty(result);
 
@@ -61,11 +61,11 @@ public class YamlDataImporterTests
     [Fact]
     public void Import_ShouldThrowException_WhenFileDoesNotExist()
     {
-        // Arrange: формируем путь к несуществующему файлу.
+        // Arrange
         var nonExistentFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".yaml");
         var importer = new YamlDataImporter<TestData>();
 
-        // Act & Assert: ожидаем исключение FileNotFoundException.
+        // Act & Assert
         Assert.Throws<FileNotFoundException>(() => importer.Import(nonExistentFile));
     }
 }

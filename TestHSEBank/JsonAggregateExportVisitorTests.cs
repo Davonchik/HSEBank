@@ -28,7 +28,7 @@ public class JsonAggregateExportVisitorTests
             visitor.SaveToFile(tempFile);
             var content = File.ReadAllText(tempFile);
 
-            // Assert: Ожидается, что при отсутствии объектов будет записан пустой массив "[]"
+            // Assert
             Assert.Equal("[]", content.Trim());
         }
         finally
@@ -54,10 +54,9 @@ public class JsonAggregateExportVisitorTests
             visitor.SaveToFile(tempFile);
             var content = File.ReadAllText(tempFile);
 
-            // Для проверки десериализуем JSON в список JsonElement, чтобы избежать проблем с привязкой типов.
             var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(content);
             
-            // Assert: Ожидается массив с двумя объектами, содержащими свойства "Name"
+            // Assert
             Assert.Equal(2, deserialized.Count);
             bool containsAlice = deserialized.Any(e =>
                 e.TryGetProperty("Name", out JsonElement prop) && prop.GetString() == "Alice");

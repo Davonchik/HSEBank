@@ -19,7 +19,6 @@ public class YamlAggregateExportVisitorTests
             string content = File.ReadAllText(tempFile).Trim();
 
             // Assert
-            // По умолчанию, YamlDotNet сериализует пустой список как "[]"
             Assert.Contains("[]", content);
         }
         finally
@@ -45,7 +44,7 @@ public class YamlAggregateExportVisitorTests
             visitor.SaveToFile(tempFile);
             string content = File.ReadAllText(tempFile);
 
-            // Assert: проверяем, что в YAML-выводе содержатся имена "Alice" и "Bob"
+            // Assert
             Assert.Contains("Alice", content);
             Assert.Contains("Bob", content);
         }

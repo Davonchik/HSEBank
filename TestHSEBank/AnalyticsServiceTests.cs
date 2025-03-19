@@ -25,7 +25,6 @@ public class AnalyticsServiceTests
         DateTime start = new DateTime(2023, 1, 1);
         DateTime end = new DateTime(2023, 1, 31);
         
-        // Создаем операции, где только операции в январе учитываются
         var operations = new List<Operation>
         {
             new Operation { Amount = 100, Date = new DateTime(2023, 1, 5), Type = Type.Income },
@@ -38,7 +37,6 @@ public class AnalyticsServiceTests
         };
         var data = new FinancialDataDto { Operations = operations };
 
-        // В диапазоне: доход = 100+200 = 300, расход = 50+75 = 125, разница = 175.
         decimal expectedDifference = 175;
 
         // Act

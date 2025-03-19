@@ -144,7 +144,7 @@ public class CategoryRepositoryTests
     {
         // Arrange
         var categories = _fixture.CreateMany<Category>(5).ToList();
-        // Для примера отфильтруем категорию с именем "Target"
+        
         var targetCategory = categories.First();
         targetCategory.Name = "Target";
         foreach (var category in categories)

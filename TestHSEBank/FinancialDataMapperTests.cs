@@ -37,8 +37,7 @@ public class FinancialDataMapperTests
         Assert.Equal(bankAccounts.Count, result.BankAccounts.Count);
         Assert.Equal(categories.Count, result.Categories.Count);
         Assert.Equal(operations.Count, result.Operations.Count);
-
-        // Дополнительная проверка: содержимое списков совпадает с исходными
+        
         for (int i = 0; i < bankAccounts.Count; i++)
         {
             Assert.Equal(bankAccounts[i].Id, result.BankAccounts[i].Id);

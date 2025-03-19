@@ -144,7 +144,7 @@ public class OperationRepositoryTests
     {
         // Arrange
         var operations = _fixture.CreateMany<Operation>(5).ToList();
-        // Для фильтрации установим у одной операции уникальное значение CategoryId
+        
         var targetOperation = operations.First();
         var targetCategoryId = Guid.NewGuid();
         targetOperation.CategoryId = targetCategoryId;

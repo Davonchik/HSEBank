@@ -28,7 +28,7 @@ public class CategoryFacadeTests
     {
         // Arrange
         var categoryDto = _fixture.Create<CategoryDto>();
-        // Имитация отсутствия категории с таким же именем и типом
+        
         _categoryRepositoryMock.Setup(r => r.GetAll())
             .Returns(new List<Category>());
         var expectedCategory = _fixture.Create<Category>();
@@ -52,7 +52,7 @@ public class CategoryFacadeTests
         // Arrange
         var categoryDto = _fixture.Create<CategoryDto>();
         var duplicateCategory = _fixture.Create<Category>();
-        // Задаем, чтобы имя и тип совпадали
+        
         duplicateCategory.Name = categoryDto.Name;
         duplicateCategory.Type = categoryDto.Type;
         _categoryRepositoryMock.Setup(r => r.GetAll())
@@ -60,7 +60,7 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.Create(categoryDto));
-        // Проверяем, что сообщение содержит ключевые фрагменты
+        
         Assert.Contains("Категория с именем", ex.Message);
         Assert.Contains("и типом", ex.Message);
         Assert.Contains("уже существует", ex.Message);
@@ -180,7 +180,7 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.GetByCondition(predicate));
-        // Проверяем, что сообщение содержит фразу, указывающую на отсутствие подходящих категорий, и информацию о типе условия
+        
         Assert.Contains("Нет подходящих", ex.Message);
         Assert.Contains("System.Func", ex.Message);
     }

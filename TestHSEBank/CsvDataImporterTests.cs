@@ -45,7 +45,7 @@ public class CsvDataImporterTests
     [Fact]
     public void Import_ShouldThrowException_WhenDataFieldMissing()
     {
-        // Arrange: CSV с заголовком, отличным от "Data"
+        // Arrange
         var csvContent = "Foo\r\n" +
                          "\"{\\\"Name\\\":\\\"Alice\\\",\\\"Value\\\":123}\"";
         var tempFile = Path.GetTempFileName();
@@ -53,7 +53,7 @@ public class CsvDataImporterTests
 
         var importer = new CsvDataImporter<TestData>();
 
-        // Act & Assert: ожидаем, что вызов csv.GetField("Data") выбросит MissingFieldException
+        // Act & Assert
         var ex = Assert.Throws<CsvHelper.MissingFieldException>(() => importer.Import(tempFile));
         Assert.Contains("Field with name 'Data' does not exist", ex.Message);
 
