@@ -1,0 +1,29 @@
+- Type: 1
+  BankAccountId: "59edb8fe-4faa-43ef-ab2f-b62e48a2e4dd"
+  Amount: 100.50
+  Description: "Salary"
+  CategoryId: "456e4567-e89b-12d3-a456-426614174000"
+
+- Type: 2
+  BankAccountId: "c829d95d-1d7d-4194-87bf-664379d8d57d"
+  Amount: 50.75
+  Description: "Groceries"
+  CategoryId: "4bded6e6-7c77-4032-8d51-4b4c5c3400b0"
+
+- Type: 1
+  BankAccountId: "f10d376a-c433-499d-b05f-b528f783b901"
+  Amount: 200.00
+  Description: "Bonus"
+  CategoryId: "321e4567-e89b-12d3-a456-426614174000"
+
+- Type: 2
+  BankAccountId: "ed330a1b-8b05-4195-a758-51d02872780b"
+  Amount: 75.30
+  Description: "Utilities"
+  CategoryId: "654e4567-e89b-12d3-a456-426614174000"
+
+- Type: 1
+  BankAccountId: "1950d0f4-35f2-4e55-96c5-e41f5b0d6dd6"
+  Amount: 150.00
+  Description: "Freelance"
+  CategoryId: "987e4567-e89b-12d3-a456-426614174000"

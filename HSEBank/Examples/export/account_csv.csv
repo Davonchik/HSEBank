@@ -1,0 +1,6 @@
+Type,Data
+BankAccount,"{""Id"":""2f391ae2-ca7a-4ca8-b895-e70bc0808a79"",""Name"":""111"",""Balance"":0}"
+BankAccount,"{""Id"":""f168d940-584d-4c05-8eb2-c8e475a8f910"",""Name"":""222"",""Balance"":0}"
+BankAccount,"{""Id"":""3bbfebe2-2b11-4d7d-b97a-ff4515195642"",""Name"":""333"",""Balance"":0}"
+BankAccount,"{""Id"":""107d9629-f3fb-44bb-83d3-25f8379e37e1"",""Name"":""444"",""Balance"":0}"
+BankAccount,"{""Id"":""8abbad94-9c52-4984-af6e-b95cec766f51"",""Name"":""555"",""Balance"":0}"

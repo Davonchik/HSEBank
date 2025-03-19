@@ -1,0 +1,15 @@
+- categoryId: 456e4567-e89b-12d3-a456-426614174000
+  type: Income
+  name: Salary
+- categoryId: 789e4567-e89b-12d3-a456-426614174000
+  type: Expense
+  name: Groceries
+- categoryId: 321e4567-e89b-12d3-a456-426614174000
+  type: Income
+  name: Bonus
+- categoryId: 654e4567-e89b-12d3-a456-426614174000
+  type: Expense
+  name: Utilities
+- categoryId: 987e4567-e89b-12d3-a456-426614174000
+  type: Income
+  name: Freelance

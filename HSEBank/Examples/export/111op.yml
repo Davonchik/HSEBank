@@ -1,0 +1,70 @@
+- Id: 423b6074-ae18-47d1-bedf-8359d91615d0
+  Type: Income
+  BankAccountId: 7a81a572-3ec5-42a3-acfa-f206f0ef2486
+  Amount: 0
+  Date: 2025-03-19T20:53:09.7303810+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: a0960a8d-1e35-4c37-becd-15674da47dbf
+  Type: Income
+  BankAccountId: 4d93c3eb-fbbe-4a27-8ae7-c90a27642332
+  Amount: 0
+  Date: 2025-03-19T20:53:09.7857960+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: fec13202-4ef8-4b1e-baa1-92acd249e377
+  Type: Income
+  BankAccountId: 41cd73cb-6f8c-4c09-8fa9-daa415dd94e8
+  Amount: 0
+  Date: 2025-03-19T20:53:09.7858110+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: b6c7c5f4-09b3-42ec-b5ae-b6fe492e2c5b
+  Type: Income
+  BankAccountId: 3541e293-e2e9-4af1-ac8b-b7b1c3bbd03a
+  Amount: 0
+  Date: 2025-03-19T20:53:54.2180600+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: ffd8e799-9013-41f8-bb07-404a081cb719
+  Type: Income
+  BankAccountId: aee352af-ca73-4582-abe4-7b312cdf99c2
+  Amount: 0
+  Date: 2025-03-19T20:53:54.2182060+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: 655a3034-0a1d-41c1-8d55-f851a4ffde4f
+  Type: Income
+  BankAccountId: ce04a46e-90ae-4efe-bbeb-7b7467d048fc
+  Amount: 0
+  Date: 2025-03-19T20:53:54.2182120+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: d955f647-c366-429e-a5f0-474c46b95f19
+  Type: Income
+  BankAccountId: 25270dd7-21f3-421f-8521-825baf5b90b4
+  Amount: 100
+  Date: 2025-03-19T20:53:54.2182170+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: d34ad97d-77ec-48c4-9bf3-deb0930fe5ab
+  Type: Income
+  BankAccountId: 0f6e7243-c738-4ef3-9ac0-60806e0f4289
+  Amount: 0
+  Date: 2025-03-19T20:53:54.2182230+03:00
+  Description: Init operation
+  CategoryId: 9c53812e-7ac2-493e-99bd-76dfcf3c596c
+- Id: 352cafa6-29dc-4528-a450-377802b3f368
+  Type: Expense
+  BankAccountId: 25270dd7-21f3-421f-8521-825baf5b90b4
+  Amount: 101
+  Date: 2025-03-19T20:56:17.4902420+03:00
+  Description: 
+  CategoryId: 654e4567-e89b-12d3-a456-426614174000
+- Id: f88ff205-7dd8-4cd4-bf23-66245c90f94a
+  Type: Income
+  BankAccountId: 25270dd7-21f3-421f-8521-825baf5b90b4
+  Amount: 2
+  Date: 2025-03-19T20:57:09.2837050+03:00
+  Description: 
+  CategoryId: 987e4567-e89b-12d3-a456-426614174000

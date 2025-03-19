@@ -1,0 +1,6 @@
+Type,Data
+Category,"{""Id"":""456e4567-e89b-12d3-a456-426614174000"",""Type"":1,""Name"":""Salary""}"
+Category,"{""Id"":""789e4567-e89b-12d3-a456-426614174000"",""Type"":2,""Name"":""Groceries""}"
+Category,"{""Id"":""321e4567-e89b-12d3-a456-426614174000"",""Type"":1,""Name"":""Bonus""}"
+Category,"{""Id"":""654e4567-e89b-12d3-a456-426614174000"",""Type"":2,""Name"":""Utilities""}"
+Category,"{""Id"":""987e4567-e89b-12d3-a456-426614174000"",""Type"":1,""Name"":""Freelance""}"

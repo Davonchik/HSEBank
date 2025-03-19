@@ -1,0 +1,37 @@
+[
+  {
+      "Type": 1,
+      "BankAccountId": "4b8d4963-7ac1-443c-b305-fae19c8093a3",
+      "Amount": 100.50,
+      "Description": "Salary",
+      "CategoryId": "456e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+      "Type": 2,
+      "BankAccountId": "158a6c21-791b-464f-a3b3-af03ad330382",
+      "Amount": 50.75,
+      "Description": "Groceries",
+      "CategoryId": "4bded6e6-7c77-4032-8d51-4b4c5c3400b0"
+  },
+  {
+      "Type": 1,
+      "BankAccountId": "812aecbb-8ba0-4263-99e4-2f7c1d97678b",
+      "Amount": 200.00,
+      "Description": "Bonus",
+      "CategoryId": "321e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+      "Type": 2,
+      "BankAccountId": "c62d361f-2236-4074-be0d-094b768ca05c",
+      "Amount": 75.30,
+      "Description": "Utilities",
+      "CategoryId": "654e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+      "Type": 1,
+      "BankAccountId": "0d7a3b72-ccf0-437f-9dbb-571639f1a8f3",
+      "Amount": 150.00,
+      "Description": "Freelance",
+      "CategoryId": "987e4567-e89b-12d3-a456-426614174000"
+  }
+]

@@ -1,0 +1,28 @@
+[
+    {
+      "CategoryId": "456e4567-e89b-12d3-a456-426614174000",
+      "Type": 1,
+      "Name": "Salary"
+    },
+    {
+      "CategoryId": "4bded6e6-7c77-4032-8d51-4b4c5c3400b0",
+      "Type": 2,
+      "Name": "Groceries"
+    },
+    {
+      "CategoryId": "321e4567-e89b-12d3-a456-426614174000",
+      "Type": 1,
+      "Name": "Bonus"
+    },
+    {
+      "CategoryId": "654e4567-e89b-12d3-a456-426614174000",
+      "Type": 2,
+      "Name": "Utilities"
+    },
+    {
+      "CategoryId": "987e4567-e89b-12d3-a456-426614174000",
+      "Type": 1,
+      "Name": "Freelance"
+    }
+]
+  

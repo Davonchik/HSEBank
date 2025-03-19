@@ -15,6 +15,11 @@
 
     <ItemGroup>
       <Folder Include="BusinessLogic\" />
+      <Folder Include="Examples\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Examples\import\.DS_Store" />
     </ItemGroup>
 
 </Project>

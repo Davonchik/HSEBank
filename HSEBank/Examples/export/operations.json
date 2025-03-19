@@ -1,0 +1,74 @@
+[
+  {
+    "Id": "a1e107d7-ae45-4145-803a-eb79dc931995",
+    "Type": 2,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 50.75,
+    "Date": "2025-03-16T00:56:31.305042+03:00",
+    "Description": "Groceries",
+    "CategoryId": "789e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "b9c7b150-2d85-4f27-ab3c-d263526c2520",
+    "Type": 1,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 100.50,
+    "Date": "2025-03-16T00:56:31.305009+03:00",
+    "Description": "Salary",
+    "CategoryId": "456e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "299932c6-9aac-46ac-aeb2-cfb724600115",
+    "Type": 1,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 200.00,
+    "Date": "2025-03-16T00:51:30.869544+03:00",
+    "Description": "Bonus",
+    "CategoryId": "321e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "0eaa3b9a-b286-41bc-b217-5758971b36fc",
+    "Type": 2,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 75.30,
+    "Date": "2025-03-16T00:51:30.869546+03:00",
+    "Description": "Utilities",
+    "CategoryId": "654e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "09f25475-e651-4615-a5d7-1c1a92aa3184",
+    "Type": 1,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 150.00,
+    "Date": "2025-03-16T00:51:30.869555+03:00",
+    "Description": "Freelance",
+    "CategoryId": "987e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "3100e085-bcc5-423e-a6d0-70d28a7161c0",
+    "Type": 1,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 200.00,
+    "Date": "2025-03-16T00:56:31.305043+03:00",
+    "Description": "Bonus",
+    "CategoryId": "321e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "bf25b99f-a7c6-4fc9-9a54-fad9cb21394a",
+    "Type": 2,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 75.30,
+    "Date": "2025-03-16T00:56:31.305044+03:00",
+    "Description": "Utilities",
+    "CategoryId": "654e4567-e89b-12d3-a456-426614174000"
+  },
+  {
+    "Id": "5df2ed79-938a-4e61-8e65-7f05698ac23f",
+    "Type": 1,
+    "BankAccountId": "22368c72-cf41-4add-8df8-fb1c2681671b",
+    "Amount": 150.00,
+    "Date": "2025-03-16T00:56:31.305046+03:00",
+    "Description": "Freelance",
+    "CategoryId": "987e4567-e89b-12d3-a456-426614174000"
+  }
+]

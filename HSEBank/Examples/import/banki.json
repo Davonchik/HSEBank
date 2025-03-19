@@ -1,0 +1,32 @@
+[
+  {
+    "Id": "fbc40bb0-e1b9-4fce-8562-4895a2837e04",
+    "Name": "111",
+    "Balance": 0
+  },
+  {
+    "Id": "e5f8d5de-7188-4374-b2b2-891b26ac92b1",
+    "Name": "222",
+    "Balance": -1101.50
+  },
+  {
+    "Id": "527c36da-effd-4b32-ab09-ccf49245bfc1",
+    "Name": "333",
+    "Balance": 0
+  },
+  {
+    "Id": "37b43d99-56e4-4e86-acc4-4226e1dd271e",
+    "Name": "444",
+    "Balance": 0
+  },
+  {
+    "Id": "1db9b12d-1a5e-4b0d-bc6e-f97bf458a667",
+    "Name": "555",
+    "Balance": 0
+  },
+  {
+    "Id": "19f3e3a3-0c83-45c9-8f1d-fa02381669e4",
+    "Name": "sdcsdv",
+    "Balance": 0
+  }
+]
