@@ -60,7 +60,7 @@ public class FinancialFactoryTests
         // Assert
         Assert.NotEqual(Guid.Empty, result.Id);
         Assert.Equal(bankAccountDto.Name, result.Name);
-        Assert.Equal(bankAccountDto.InitBalance, result.Balance);
+        Assert.Equal(bankAccountDto.Balance, result.Balance);
     }
 
     [Fact]

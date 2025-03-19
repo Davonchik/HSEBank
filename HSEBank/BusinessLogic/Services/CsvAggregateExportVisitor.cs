@@ -6,6 +6,9 @@ using HSEBank.DataAccess.Models;
 
 namespace HSEBank.BusinessLogic.Services.Facades;
 
+/// <summary>
+/// CSV files export logic.
+/// </summary>
 public class CsvAggregateExportVisitor : IDataExportVisitor
 {
     private readonly List<IVisitable> _objects = [];

@@ -3,6 +3,9 @@ using HSEBank.DataAccess.Models;
 
 namespace HSEBank.BusinessLogic.Services.Facades;
 
+/// <summary>
+/// Operation Facade interface.
+/// </summary>
 public interface IOperationFacade
 {
     public Operation Create(OperationDto operationDto);

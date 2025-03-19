@@ -4,6 +4,9 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace HSEBank.BusinessLogic.Services;
 
+/// <summary>
+/// YAML / YML files export logic.
+/// </summary>
 public class YamlAggregateExportVisitor : IDataExportVisitor
 {
     private readonly List<IVisitable> _objects = [];
@@ -11,7 +14,6 @@ public class YamlAggregateExportVisitor : IDataExportVisitor
     public void SaveToFile(string filePath)
     {
         var serializer = new SerializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .Build();
         string yaml = serializer.Serialize(_objects);
         File.WriteAllText(filePath, yaml);

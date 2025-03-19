@@ -5,6 +5,9 @@ using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace HSEBank.BusinessLogic.Services;
 
+/// <summary>
+/// Service for analytics work.
+/// </summary>
 public class AnalyticsService : IAnalyticsService
 {
     public decimal GetBalanceDifference(FinancialDataDto data, DateTime startDate, DateTime endDate)

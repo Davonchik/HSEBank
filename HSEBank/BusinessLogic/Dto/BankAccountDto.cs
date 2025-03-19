@@ -6,5 +6,5 @@ namespace HSEBank.BusinessLogic.Dto;
 public class BankAccountDto
 {
     public string Name { get; set; }
-    public decimal InitBalance { get; set; }
+    public decimal Balance { get; set; }
 }

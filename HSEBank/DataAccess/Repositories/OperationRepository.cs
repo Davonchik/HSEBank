@@ -4,6 +4,9 @@ using HSEBank.DataAccess.Repositories.Abstractions;
 
 namespace HSEBank.DataAccess.Repositories;
 
+/// <summary>
+/// Operation service.
+/// </summary>
 public class OperationRepository : IOperationRepository
 {
     private readonly Dictionary<Guid, Operation> _operations = new();

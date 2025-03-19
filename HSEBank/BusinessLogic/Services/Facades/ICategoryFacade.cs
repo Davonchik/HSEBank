@@ -2,8 +2,10 @@ using HSEBank.BusinessLogic.Dto;
 using HSEBank.DataAccess.Models;
 
 namespace HSEBank.BusinessLogic.Services.Facades;
-//TODO: убрать модификаторы доступа
 
+/// <summary>
+/// Category Facade interface.
+/// </summary>
 public interface ICategoryFacade
 {
     public Category Create(CategoryDto categoryDto);

@@ -30,11 +30,15 @@ public class FinancialFactory : IFinancialFactory
 
     public BankAccount CreateBankAccount(BankAccountDto bankAccountDto)
     {
+        if (bankAccountDto.Balance < 0)
+        {
+            throw new ArgumentException("Нельзя создать аккаунт с отрицательным балансом!");
+        }
         return new BankAccount
         {
             Id = Guid.NewGuid(),
             Name = bankAccountDto.Name,
-            Balance = bankAccountDto.InitBalance
+            Balance = bankAccountDto.Balance
         };
     }
 

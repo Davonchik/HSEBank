@@ -5,6 +5,9 @@ using HSEBank.DataAccess.Models;
 
 namespace HSEBank.BusinessLogic.Services;
 
+/// <summary>
+/// JSON files export logic.
+/// </summary>
 public class JsonAggregateExportVisitor : IDataExportVisitor
 {
     private readonly List<IVisitable> _objects = [];

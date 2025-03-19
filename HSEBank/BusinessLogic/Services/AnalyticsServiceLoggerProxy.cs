@@ -5,6 +5,10 @@ using HSEBank.DataAccess.Models;
 
 namespace HSEBank.BusinessLogic.Services;
 
+/// <summary>
+/// Logger for analytics.
+/// </summary>
+/// <param name="service"></param>
 public class AnalyticsServiceLoggerProxy(IAnalyticsService service) : IAnalyticsService
 {
     private IAnalyticsService _service = service;

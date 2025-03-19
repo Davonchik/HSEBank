@@ -4,6 +4,9 @@ using HSEBank.DataAccess.Models;
 
 namespace HSEBank.BusinessLogic.Services.Facades;
 
+/// <summary>
+/// Account Facade interface.
+/// </summary>
 public interface IAccountFacade
 {
     public BankAccount Create(BankAccountDto accountDto);

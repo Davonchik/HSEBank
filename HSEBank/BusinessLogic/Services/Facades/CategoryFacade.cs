@@ -5,6 +5,9 @@ using HSEBank.DataAccess.Repositories.Abstractions;
 
 namespace HSEBank.BusinessLogic.Services.Facades;
 
+/// <summary>
+/// Implementation of Category Facade (CRUD logic).
+/// </summary>
 public class CategoryFacade : ICategoryFacade
 {
     private IFinancialFactory _financialFactory { get; }

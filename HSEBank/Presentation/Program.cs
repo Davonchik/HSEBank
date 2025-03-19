@@ -12,9 +12,11 @@ using Type = HSEBank.DataAccess.Common.Enums.Type;
 Directory.CreateDirectory("import");
 Directory.CreateDirectory("export");
 
+// DI SETTINGS.
+
 var services = new ServiceCollection();
 
-// Основные фасады и репозитории
+// Main Facades and Repositories.
 services.AddScoped<IAccountFacade, AccountFacade>();
 services.AddScoped<ICategoryFacade, CategoryFacade>();
 services.AddScoped<IOperationFacade, OperationFacade>();
@@ -23,26 +25,24 @@ services.AddScoped<IAccountRepository, AccountRepository>();
 services.AddScoped<ICategoryRepository, CategoryRepository>();
 services.AddScoped<IOperationRepository, OperationRepository>();
 
-// Фабрики
+// Factories.
 services.AddScoped<IFinancialFactory, FinancialFactory>();
 
-// Сервис аналитики и декоратор
+// Analytics service and decorator.
 services.AddScoped<AnalyticsService>();
 services.AddScoped<IAnalyticsService>(provider =>
     new AnalyticsServiceLoggerProxy(provider.GetRequiredService<AnalyticsService>()));
 
-// Регистрация главного фасада (FinancialFacade)
+// FinancialFacade registration.
 services.AddScoped<IFinancialFacade>(provider => FinancialFacade.GetInstance(
     provider.GetRequiredService<IAccountFacade>(),
     provider.GetRequiredService<ICategoryFacade>(),
     provider.GetRequiredService<IOperationFacade>(),
     provider.GetRequiredService<IAnalyticsService>()));
 
-
-
 var serviceProvider = services.BuildServiceProvider();
 
-// Получаем фасад из DI
+// Get Facade from DI.
 var financialFacade = serviceProvider.GetRequiredService<IFinancialFacade>();
 
 static bool CheckImportPath(string importFileName, out string importFilePath)
@@ -68,7 +68,7 @@ static bool CheckExportDirectory(string exportFileName, out string exportFilePat
     return true;
 }
 
-//financialFacade.ImportOperationsFromFile("import/test1_json.json");
+// Menu for Import / Export logic.
 static void ProcessImportExportMenu(IFinancialFacade facade)
 {
     Console.Write("Введите имя файла: ");
@@ -128,6 +128,8 @@ static void ProcessImportExportMenu(IFinancialFacade facade)
     }
 }
 
+// Main part - Console app.
+
 bool exitRequested = false;
 
 while (!exitRequested)
@@ -167,7 +169,7 @@ while (!exitRequested)
                 var newAccount = financialFacade.CreateBankAccount(new BankAccountDto
                 {
                     Name = accountName,
-                    InitBalance = 0
+                    Balance = 0
                 });
 
                 Console.WriteLine($"Создан счёт: {newAccount.Id}, {newAccount.Name}");

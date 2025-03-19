@@ -4,10 +4,15 @@ using HSEBank.BusinessLogic.Services.Abstractions;
 using HSEBank.BusinessLogic.Services.Facades;
 using HSEBank.DataAccess.Common.Enums;
 using HSEBank.DataAccess.Models;
+using YamlDotNet.Core;
+using Constants = HSEBank.DataAccess.Common.Constants.Constants;
 using Type = HSEBank.DataAccess.Common.Enums.Type;
 
 namespace HSEBank.Presentation;
 
+/// <summary>
+/// Main service (Facade) for user actions with HSE-Bank-Service.
+/// </summary>
 public class FinancialFacade : IFinancialFacade
 {
     private static FinancialFacade _instance;
@@ -81,7 +86,38 @@ public class FinancialFacade : IFinancialFacade
 
     public BankAccount CreateBankAccount(BankAccountDto bankAccountDto)
     {
-        return _accountFacade.Create(bankAccountDto);
+        var createdAccount = _accountFacade.Create(bankAccountDto);
+        
+        Guid categoryId;
+        
+        if (!_categoryFacade.CategoryExists(Guid.Parse(Constants.InitCategoryId)))
+        {
+            var category = CreateCategory(new CategoryDto
+            {
+                Name = Constants.InitCategoryName,
+                CategoryId = Guid.Parse(Constants.InitCategoryId),
+                Type = Type.Income
+            });
+
+            categoryId = category.CategoryId;
+        }
+        else
+        {
+            categoryId = GetCategory(Guid.Parse(Constants.InitCategoryId)).CategoryId;
+        }
+
+        var operation = new OperationDto
+        {
+            Amount = bankAccountDto.Balance,
+            CategoryId = categoryId,
+            Description = Constants.InitOperationDescription,
+            BankAccountId = createdAccount.Id,
+            Type = Type.Income
+        };
+        
+        CreateOperation(operation);
+        
+        return createdAccount;
     }
 
     public bool EditBankAccount(EditBankAccountDto editBankAccountDto)
@@ -151,9 +187,11 @@ public class FinancialFacade : IFinancialFacade
     {
         if (!_accountFacade.AccountExists(bankAccountId))
         {
-            throw new ArgumentException($"Нет такого аккаунта {nameof(bankAccountId)}");
+            throw new ArgumentException($"Аккаунта с таким ID'{bankAccountId}' не существует!");
         }
+        
         decimal balance = 0;
+        
         foreach (var op in _operationFacade.GetByCondition(o => o.BankAccountId == bankAccountId))
         {
             balance += (op.Type == Type.Income ? op.Amount : -op.Amount);

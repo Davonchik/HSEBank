@@ -3,6 +3,9 @@ using HSEBank.BusinessLogic.Services.Facades;
 
 namespace HSEBank.BusinessLogic.Services;
 
+/// <summary>
+/// Factory for working with different types of files.
+/// </summary>
 public class DataTransferFactory
 {
     public static IDataImporter<T> CreateImporter<T>(string filePath) where T : new()
