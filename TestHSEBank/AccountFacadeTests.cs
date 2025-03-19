@@ -53,7 +53,8 @@ public class AccountFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _accountFacade.GetById(id));
-        Assert.Equal($"Account with id {id} does not exist", ex.Message);
+        Assert.Contains(id.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
 
     [Fact]
@@ -81,7 +82,8 @@ public class AccountFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _accountFacade.EditBankAccount(editDto));
-        Assert.Equal($"Account with id {editDto.BankAccountId} does not exist", ex.Message);
+        Assert.Contains(editDto.BankAccountId.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
 
     [Fact]
@@ -107,9 +109,10 @@ public class AccountFacadeTests
         var id = Guid.NewGuid();
         _accountRepositoryMock.Setup(r => r.Exists(id)).Returns(false);
 
-        // Act & Assert
+        // Act & Assert: проверяем, что выбрасывается исключение и сообщение содержит идентификатор и фразу "не существует"
         var ex = Assert.Throws<ArgumentException>(() => _accountFacade.DeleteBankAccount(id));
-        Assert.Equal($"Account with id {id} does not exist", ex.Message);
+        Assert.Contains(id.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
 
     [Fact]

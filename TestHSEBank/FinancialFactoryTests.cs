@@ -23,8 +23,8 @@ public class FinancialFactoryTests
         operationDto.Amount = -1;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgumentException>(() => _factory.CreateOperation(operationDto));
-        Assert.Equal("Amount cannot be negative", exception.Message);
+        var ex = Assert.Throws<ArgumentException>(() => _factory.CreateOperation(operationDto));
+        Assert.Equal("Стоимость не может быть отрицательной!", ex.Message);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class FinancialFactoryTests
     {
         // Arrange
         var operationDto = _fixture.Create<OperationDto>();
-        operationDto.Amount = 100; // обеспечиваем неотрицательное значение
+        operationDto.Amount = 100; // неотрицательное значение
 
         // Act
         var result = _factory.CreateOperation(operationDto);
@@ -44,15 +44,28 @@ public class FinancialFactoryTests
         Assert.Equal(operationDto.BankAccountId, result.BankAccountId);
         Assert.Equal(operationDto.CategoryId, result.CategoryId);
         Assert.NotEqual(Guid.Empty, result.Id);
-        // Проверяем, что дата создания близка к текущему времени (не более 5 секунд)
+        // Проверяем, что дата создания близка к текущему времени (например, в пределах 5 секунд)
         Assert.True((DateTime.Now - result.Date).TotalSeconds < 5);
     }
 
     [Fact]
-    public void CreateBankAccount_ShouldReturnValidBankAccount()
+    public void CreateBankAccount_ShouldThrowException_WhenBalanceIsNegative()
     {
         // Arrange
         var bankAccountDto = _fixture.Create<BankAccountDto>();
+        bankAccountDto.Balance = -100;
+
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentException>(() => _factory.CreateBankAccount(bankAccountDto));
+        Assert.Equal("Нельзя создать аккаунт с отрицательным балансом!", ex.Message);
+    }
+
+    [Fact]
+    public void CreateBankAccount_ShouldReturnValidBankAccount_WhenBalanceIsNonNegative()
+    {
+        // Arrange
+        var bankAccountDto = _fixture.Create<BankAccountDto>();
+        bankAccountDto.Balance = 500; // неотрицательное значение
 
         // Act
         var result = _factory.CreateBankAccount(bankAccountDto);
@@ -64,10 +77,30 @@ public class FinancialFactoryTests
     }
 
     [Fact]
-    public void CreateCategory_ShouldReturnValidCategory()
+    public void CreateCategory_ShouldReturnCategory_WithProvidedCategoryId()
     {
         // Arrange
         var categoryDto = _fixture.Create<CategoryDto>();
+        var providedId = Guid.NewGuid();
+        // Устанавливаем CategoryId в DTO
+        categoryDto.CategoryId = providedId;
+
+        // Act
+        var result = _factory.CreateCategory(categoryDto);
+
+        // Assert
+        Assert.Equal(providedId, result.CategoryId);
+        Assert.Equal(categoryDto.Name, result.Name);
+        Assert.Equal(categoryDto.Type, result.Type);
+    }
+
+    [Fact]
+    public void CreateCategory_ShouldGenerateNewCategoryId_WhenNotProvided()
+    {
+        // Arrange
+        var categoryDto = _fixture.Create<CategoryDto>();
+        // Оставляем CategoryId равным null
+        categoryDto.CategoryId = null;
 
         // Act
         var result = _factory.CreateCategory(categoryDto);

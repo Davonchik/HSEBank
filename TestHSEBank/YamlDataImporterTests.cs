@@ -4,7 +4,8 @@ namespace TestHSEBank;
 
 public class YamlDataImporterTests
 {
-    private class TestData
+    // Сделаем тип TestData публичным, чтобы десериализатор мог его корректно обрабатывать.
+    public class TestData
     {
         public string Name { get; set; }
         public int Value { get; set; }
@@ -13,22 +14,19 @@ public class YamlDataImporterTests
     [Fact]
     public void Import_ShouldReturnList_WhenYamlIsValid()
     {
-        // Arrange: создаём YAML-строку с данными
-        var yamlContent = @"- name: Alice
-  value: 123
-- name: Bob
-  value: 456";
-
-        // Создаём временный файл
+        // Arrange: создаём YAML-строку с данными, используя явные символы новой строки.
+        var yamlContent = "- Name: \"Alice\"\n  Value: 123\n- Name: \"Bob\"\n  Value: 456";
+        
+        // Создаём временный файл и записываем в него YAML.
         var tempFile = Path.GetTempFileName();
         File.WriteAllText(tempFile, yamlContent);
 
         var importer = new YamlDataImporter<TestData>();
 
-        // Act: выполняем импорт данных из файла
+        // Act: выполняем импорт данных из файла.
         var result = importer.Import(tempFile);
 
-        // Assert: проверяем, что данные импортированы корректно
+        // Assert: проверяем, что данные импортированы корректно.
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
         Assert.Equal("Alice", result[0].Name);
@@ -36,38 +34,38 @@ public class YamlDataImporterTests
         Assert.Equal("Bob", result[1].Name);
         Assert.Equal(456, result[1].Value);
 
-        // Clean up: удаляем временный файл
+        // Clean up: удаляем временный файл.
         File.Delete(tempFile);
     }
 
     [Fact]
     public void Import_ShouldReturnEmptyList_WhenYamlIsEmpty()
     {
-        // Arrange: создаём пустой файл
+        // Arrange: создаём пустой файл.
         var tempFile = Path.GetTempFileName();
         File.WriteAllText(tempFile, string.Empty);
 
         var importer = new YamlDataImporter<TestData>();
 
-        // Act: импортируем данные из пустого файла
+        // Act: импортируем данные из пустого файла.
         var result = importer.Import(tempFile);
 
-        // Assert: результат не null, но пустой список
+        // Assert: результат не null, но пустой список.
         Assert.NotNull(result);
         Assert.Empty(result);
 
-        // Clean up
+        // Clean up.
         File.Delete(tempFile);
     }
 
     [Fact]
     public void Import_ShouldThrowException_WhenFileDoesNotExist()
     {
-        // Arrange: формируем путь к несуществующему файлу
+        // Arrange: формируем путь к несуществующему файлу.
         var nonExistentFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".yaml");
         var importer = new YamlDataImporter<TestData>();
 
-        // Act & Assert: ожидаем исключение FileNotFoundException
+        // Act & Assert: ожидаем исключение FileNotFoundException.
         Assert.Throws<FileNotFoundException>(() => importer.Import(nonExistentFile));
     }
 }

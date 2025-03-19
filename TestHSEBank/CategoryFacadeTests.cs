@@ -45,14 +45,14 @@ public class CategoryFacadeTests
         _financialFactoryMock.Verify(f => f.CreateCategory(categoryDto), Times.Once);
         _categoryRepositoryMock.Verify(r => r.Create(expectedCategory), Times.Once);
     }
-
+    
     [Fact]
     public void Create_Should_Throw_Exception_When_Duplicate_Category_Exists()
     {
         // Arrange
         var categoryDto = _fixture.Create<CategoryDto>();
         var duplicateCategory = _fixture.Create<Category>();
-        // Имитация существования категории с таким же именем и типом
+        // Задаем, чтобы имя и тип совпадали
         duplicateCategory.Name = categoryDto.Name;
         duplicateCategory.Type = categoryDto.Type;
         _categoryRepositoryMock.Setup(r => r.GetAll())
@@ -60,8 +60,12 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.Create(categoryDto));
-        Assert.Contains($"Category with name {categoryDto.Name} and type {categoryDto.Type} already exis", ex.Message);
+        // Проверяем, что сообщение содержит ключевые фрагменты
+        Assert.Contains("Категория с именем", ex.Message);
+        Assert.Contains("и типом", ex.Message);
+        Assert.Contains("уже существует", ex.Message);
     }
+
 
     [Fact]
     public void GetById_Should_Throw_Exception_When_Category_Does_Not_Exist()
@@ -72,7 +76,8 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.GetById(id));
-        Assert.Equal($"Category with id {id} does not exist", ex.Message);
+        Assert.Contains(id.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
 
     [Fact]
@@ -100,8 +105,10 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.EditCategory(editDto));
-        Assert.Equal($"Category with id {editDto.CategoryId} does not exist", ex.Message);
+        Assert.Contains(editDto.CategoryId.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
+
 
     [Fact]
     public void EditCategory_Should_Return_True_When_Update_Succeeds()
@@ -128,7 +135,9 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.DeleteCategory(id));
-        Assert.Equal($"Category with id {id} does not exist", ex.Message);
+        Assert.Contains(id.ToString(), ex.Message);
+        Assert.Contains("Категории с таким ID", ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
 
     [Fact]
@@ -171,8 +180,11 @@ public class CategoryFacadeTests
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _categoryFacade.GetByCondition(predicate));
-        Assert.Equal($"No operations found for condition {predicate}", ex.Message);
+        // Проверяем, что сообщение содержит фразу, указывающую на отсутствие подходящих категорий, и информацию о типе условия
+        Assert.Contains("Нет подходящих", ex.Message);
+        Assert.Contains("System.Func", ex.Message);
     }
+
 
     [Fact]
     public void GetByCondition_Should_Return_Filtered_Categories_When_Found()

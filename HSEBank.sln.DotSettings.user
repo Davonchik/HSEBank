@@ -5,22 +5,25 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AJsonSerializer_002EWrite_002EString_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F3ed54de170e7e0a9d6d3e18392849fc582534eaef556e7663545ef9743cb1f1_003FJsonSerializer_002EWrite_002EString_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AThrowHelper_002ESerialization_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Ffdb8d9b3b165267805e3e95fc1e2a1d825f7e0eeeeb752f3468f145d3889a_003FThrowHelper_002ESerialization_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b63cda1_002Df98b_002D4344_002Da73a_002Dc5ddb97dd71e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Throw_Exception_If_No_Such_Category" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b63cda1_002Df98b_002D4344_002Da73a_002Dc5ddb97dd71e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Throw_Exception_If_No_Such_Category" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.Throw_Exception_If_No_Such_Category&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.Throw_Exception_If_No_Such_Account_On_CreateOperation&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateOperation_Success&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.EditOperation_Throws_Exception_When_Category_Not_Exist&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.EditOperation_Success&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.JsonAggregateExportVisitorTests.SaveToFile_Writes_Correct_Json_When_Objects_Visited&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFactoryTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.YamlDataImporterTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.AccountFacadeTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.CategoryFacadeTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.OperationFacadeTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.JsonAggregateExportVisitorTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.YamlAggregateExportVisitorTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.AnalyticsServiceLoggerProxyTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.DataTransferFactoryTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.CsvDataImporterTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialDataMapperTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7ee7a9c0_002De787_002D467d_002Da231_002D3c795d307bb4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="DeleteOperation_Throws_Exception_When_Operation_Not_Exist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7ee7a9c0_002De787_002D467d_002Da231_002D3c795d307bb4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="DeleteOperation_Throws_Exception_When_Operation_Not_Exist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.DeleteOperation_Throws_Exception_When_Operation_Not_Exist&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.DeleteOperation_Success&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialDataDtoTests.FinancialDataDto_PropertyAssignment_WorksCorrectly&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateBankAccount_Success&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateCategory_Success&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialFacadeTests.CreateCategory_Throws_Exception_If_Category_Already_Exists&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.JsonAggregateExportVisitorTests.SaveToFile_Writes_Empty_Array_When_No_Objects_Visited&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

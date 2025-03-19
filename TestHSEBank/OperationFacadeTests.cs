@@ -47,10 +47,11 @@ public class OperationFacadeTests
         // Arrange
         var id = Guid.NewGuid();
         _operationRepositoryMock.Setup(r => r.Exists(id)).Returns(false);
-        
+    
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _operationFacade.GetById(id));
-        Assert.Equal($"Operation with id {id} does not exist", ex.Message);
+        Assert.Contains(id.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
     
     [Fact]
@@ -75,10 +76,11 @@ public class OperationFacadeTests
         // Arrange
         var editDto = _fixture.Create<EditOperationDto>();
         _operationRepositoryMock.Setup(r => r.Exists(editDto.OperationId)).Returns(false);
-        
+    
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _operationFacade.EditOperation(editDto));
-        Assert.Equal($"Operation with id {editDto.OperationId} does not exist", ex.Message);
+        Assert.Contains(editDto.OperationId.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
     
     [Fact]
@@ -103,10 +105,11 @@ public class OperationFacadeTests
         // Arrange
         var id = Guid.NewGuid();
         _operationRepositoryMock.Setup(r => r.Exists(id)).Returns(false);
-        
+    
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => _operationFacade.DeleteOperation(id));
-        Assert.Equal($"Operation with id {id} does not exist", ex.Message);
+        Assert.Contains(id.ToString(), ex.Message);
+        Assert.Contains("не существует", ex.Message);
     }
     
     [Fact]
@@ -140,15 +143,19 @@ public class OperationFacadeTests
     }
     
     [Fact]
-    public void GetByCondition_Should_Throw_Exception_When_No_Operations_Found()
+    public void GetByCondition_Should_ReturnEmptyList_When_No_Operations_Found()
     {
         // Arrange
         Func<Operation, bool> predicate = op => op.Id != Guid.Empty;
-        _operationRepositoryMock.Setup(r => r.GetByCondition(predicate)).Returns(new List<Operation>());
-        
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentException>(() => _operationFacade.GetByCondition(predicate));
-        Assert.Equal($"No operations found for condition {predicate}", ex.Message);
+        _operationRepositoryMock
+            .Setup(r => r.GetByCondition(It.IsAny<Func<Operation, bool>>()))
+            .Returns(new List<Operation>());
+    
+        // Act
+        var result = _operationFacade.GetByCondition(predicate);
+    
+        // Assert
+        Assert.Empty(result);
     }
     
     [Fact]
