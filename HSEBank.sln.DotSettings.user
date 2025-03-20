@@ -20,6 +20,7 @@
     &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.DataTransferFactoryTests&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.CsvDataImporterTests&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.FinancialDataMapperTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::79748C06-BFDA-4530-BC36-4B203A9CB2D2::net8.0::TestHSEBank.CsvAggregateExportVisitorTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7ee7a9c0_002De787_002D467d_002Da231_002D3c795d307bb4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="DeleteOperation_Throws_Exception_When_Operation_Not_Exist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
